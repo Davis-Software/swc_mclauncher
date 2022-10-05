@@ -158,7 +158,7 @@ function Settings(){
                         }}
                     />
                     <div className="text-center ms-5 pt-1 px-5 bg-dark">
-                        {ramSelected}MB
+                        {(ramSelected! / 1024).toFixed(1)}GB
                     </div>
                 </div>
 
