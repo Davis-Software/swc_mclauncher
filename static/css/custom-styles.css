@@ -1,0 +1,103 @@
+.row{
+    margin: 0;
+}
+.btn{
+    transition: all .2s;
+    outline: none !important;
+    box-shadow: none !important;
+}
+.pane{
+    background-color: rgba(100, 100, 100, .2);
+    margin: 25px 0;
+    padding: 25px;
+    backdrop-filter: blur(4px);
+}
+.launch-pane{
+    background-color: rgba(0, 0, 0, .6);
+    padding: 25px;
+    backdrop-filter: blur(4px);
+}
+.pane.dark{
+    background-color: rgba(0, 0, 0, .4);
+}
+.pane .pane-head{
+    padding: 2rem 0;
+    text-align: center;
+}
+.pane .pane-head *{
+    font-family: "Overpass", sans-serif;
+    width: 80%;
+}
+
+.list-group .list-group-item{
+    background-color: transparent;
+    padding: 15px 10px;
+    border: none;
+    border-radius: 0;
+    border-top: 1px rgba(255, 255, 255, .1) solid;
+    cursor: pointer;
+}
+.list-group .list-group-item-action{
+    transition: all .2s;
+}
+
+.form-control{
+    font-family: "Overpass", sans-serif;
+    color: #fff !important;
+    transition: all .2s;
+    background-color: rgba(10, 10, 10, .4);
+    outline: none !important;
+    box-shadow: none !important;
+    border: 1px solid #222 !important;
+}
+.form-control:hover{
+    background-color: rgba(10, 10, 10, .5);
+}
+.form-control:active, .form-control:focus{
+    background-color: rgba(10, 10, 10, .6);
+}
+
+.move-left, .move-right, .move-up, .move-down{
+    transition: all .3s ease-in-out;
+    backdrop-filter: blur(2px);
+}
+.move-left:not([move-active]), .move-right:not([move-active]), .move-up:not([move-active]), .move-down:not([move-active]){
+    opacity: 0;
+    backdrop-filter: blur(0);
+}
+.move-left:not([move-active]){
+    transform: translateX(-100%);
+}
+.move-right:not([move-active]){
+    transform: translateX(100%);
+}
+.move-up:not([move-active]){
+    transform: translateY(-100%);
+}
+.move-down:not([move-active]){
+    transform: translateY(100%);
+}
+
+.dropdown-menu{
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 5px;
+    padding: 0;
+    translate: 4px 2px;
+    background-color: #121212;
+}
+.dropdown-menu .dropdown-item{
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+}
+.dropdown-menu .dropdown-item:hover{
+    background-color: rgba(255, 255, 255, 0.08);
+}
+.dropdown-menu li:first-child .dropdown-item{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.dropdown-menu li:last-child .dropdown-item{
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}

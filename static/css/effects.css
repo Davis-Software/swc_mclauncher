@@ -1,0 +1,171 @@
+.ripple {
+    position: relative;
+}
+.ripple-inner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+    border-radius: inherit;
+    transform: translateZ(0);
+    animation: ripple-shadow 0.4s forwards;
+}
+.ripple-wave {
+    position: absolute;
+    background: rgba(255, 255, 255, .6);
+    backface-visibility: hidden;
+    border-radius: 50%;
+    opacity: 0.45;
+    transform: scale(0.7);
+    animation: ripple 1s forwards;
+}
+@keyframes ripple-shadow {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+    20% {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, .3);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+@keyframes ripple {
+    to {
+        opacity: 0;
+        transform: scale(24);
+    }
+}
+
+
+.candle-canvas{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none; /* allow user interaction */
+    border-radius: inherit; /* inherit from parent (rounded buttons etc) */
+}
+.candle{
+    position: absolute;
+    background: radial-gradient(circle closest-side, rgba(255, 255, 255, .15), transparent);
+    backface-visibility: hidden;
+    border-radius: 50%;
+    opacity: 0;
+}
+.candle-anim{
+    animation: shinetrough-candle .6s forwards;
+}
+.candle-anim-back{
+    animation: shinetrough-candle-back .6s forwards;
+}
+@keyframes shinetrough-candle {
+    to {
+        opacity: 1;
+    }
+}
+@keyframes shinetrough-candle-back {
+    from{
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+
+.shifter-box, .shifter-box span{
+    transition: all .2s;
+}
+.shifter-box:hover span, .shifter-box.active span{
+    padding-left: 20px;
+}
+.shifter-box.active span{
+    font-weight: bold;
+}
+.shifter-box::before, .shifter-box::after{
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 1px;
+    background-color: rgba(255, 255, 255, .35);
+    transition: all .3s;
+}
+.shifter-box.active::before, .shifter-box.active::after{
+    background-color: rgba(255, 255, 255, .8);
+    height: 2px;
+}
+.shifter-box::before{
+    top: 0;
+    left: 0;
+}
+.shifter-box::after{
+    bottom: 0;
+    right: 0;
+}
+.shifter-box:hover::before{
+    width: 80%;
+}
+.shifter-box:hover::after{
+    width: 80%;
+}
+.shifter-box.active::before{
+    width: 90%;
+    transform: translateX(10%);
+}
+.shifter-box.active::after{
+    width: 90%;
+    transform: translateX(-10%);
+}
+
+
+/*Loading animation*/
+.page-loader {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    padding-top: 35vh;
+}
+.page-loader .text{
+    margin-top: 20px;
+}
+.page-loader .box {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    animation: page-loader-box-animate .5s linear infinite;
+    border-radius: 3px;
+}
+@keyframes page-loader-box-animate {
+    17% { border-bottom-right-radius: 3px; }
+    25% { transform: translateY(9px) rotate(22.5deg); }
+    50% {
+        transform: translateY(18px) scale(1,.9) rotate(45deg) ;
+        border-bottom-right-radius: 40px;
+    }
+    75% { transform: translateY(9px) rotate(67.5deg); }
+    100% { transform: translateY(0) rotate(90deg); }
+}
+.page-loader .shadow {
+    position: absolute;
+    display: inline-block;
+    width: 50px;
+    height: 5px;
+    background: #000;
+    opacity: 0.3;
+    border-radius: 50%;
+    animation: page-loader-shadow-animate .5s linear infinite;
+    top: calc(35vh + 60px);
+}
+@keyframes page-loader-shadow-animate {
+    50% {
+        transform: scale(1.2,1);
+    }
+}

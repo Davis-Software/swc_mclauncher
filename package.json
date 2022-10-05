@@ -1,0 +1,30 @@
+{
+    "productName": "SWC Minecraft Launcher",
+    "homepage": "https://projects.software-city.org/",
+    "bugs": {
+        "email": "support@software-city.org"
+    },
+    "author": {
+        "name": "Davis_Software",
+        "email": "support@software-city.org"
+    },
+    "name": "swc-mclauncher",
+    "version": "0.1.0",
+    "description": "A Minecraft Launcher for Software City",
+    "license": "MIT",
+    "main": "index.js",
+    "scripts": {
+        "start": "electron .",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder --x64 --win"
+    },
+    "devDependencies": {
+        "electron": "^21.0.1",
+        "electron-builder": "^23.3.3"
+    },
+    "dependencies": {
+        "msmc": "^4.0.0-pre7",
+        "minecraft-launcher-core": "^3.16.16",
+        "markdown-it": "^13.0.1"
+    }
+}

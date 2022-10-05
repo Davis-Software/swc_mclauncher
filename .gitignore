@@ -1,0 +1,10 @@
+.idea/
+
+node_modules/
+front_src/node_modules/
+
+static/js/views/main.js
+static/js/views/main.js.map
+
+dist/
+build/

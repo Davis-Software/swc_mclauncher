@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxanium&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Overpass&display=swap');
+@font-face{
+    font-family: "MinecraftEvenings";
+    src: url("./../fonts/MinecraftEvenings-RBao.ttf");
+}
+
+*{
+    -webkit-user-drag: none;
+    user-select: none;
+    font-family: "Oxanium", sans-serif;
+}
+
+body{
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#main{
+    height: calc(100% - 36px);
+}
+
+#window-frame{
+    display: block;
+    height: 36px;
+    width: 100%;
+    z-index: 2048;
+    border-bottom: 1px solid #444;
+}
+#window-frame #user-dropdown{
+    position: absolute;
+    top: 0;
+    left: 300px;
+    height: 36px;
+    transition: all .15s;
+    -webkit-app-region: no-drag;
+}
+#window-frame #user-dropdown:hover{
+    background: rgba(65, 65, 65, .25);
+    cursor: pointer;
+}
+#window-frame #user-dropdown:active{
+    background: rgb(84, 84, 84, .25);
+}
+#window-frame #user-dropdown .button{
+    color: white;
+    height: 36px;
+    border: none;
+    border-radius: 0;
+    background: none;
+    padding: 0 10px;
+}
+#window-frame .frame-drag-section{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 36px;
+    -webkit-app-region: drag;
+}
+#window-frame .frame-controls{
+    display: grid;
+    grid-template-columns: repeat(3, 36px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    -webkit-app-region: no-drag;
+}
+#window-frame .frame-btn{
+    grid-row: 1 / span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 36px;
+    transition: all .15s;
+}
+#window-frame .frame-btn .icon {
+    width: 11px;
+    height: 11px;
+}
+#window-frame .frame-btn:hover{
+    background: rgba(65, 65, 65, .25);
+    cursor: pointer;
+}
+#window-frame .frame-btn:active{
+    background: rgb(84, 84, 84, .25);
+}
+#window-frame .frame-btn.close_ico:hover{
+    background: #E81123 !important;
+}
+#window-frame .frame-btn.close_ico:active{
+    background: #F1707A !important;
+}
+
+
+.icon{
+    height: 40px;
+}
+.icon.i-2{
+    height: 80px;
+}
+.icon.round{
+    border-radius: 25px;
+}
+
+
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+::-webkit-scrollbar-track {
+    background: rgb(102, 102, 102);
+}
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+::selection {
+    background: rgba(50, 50, 50, .5);
+}
