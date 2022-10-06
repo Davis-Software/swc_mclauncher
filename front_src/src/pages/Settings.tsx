@@ -6,16 +6,30 @@ import {getSetting, setSetting} from "../utils/settings";
 
 interface SettingsInputProps {
     name: string
-    type: "text" | "number" | "path"
+    type: "text" | "number" | "path" | "file"
     value: string | number
     onChange: (value: string | number | null) => void
 }
 function SettingsInput(props: SettingsInputProps){
     const id = `settings-input-${props.name.replace(/ /, "_").toLowerCase()}`
 
-    function fileDialog(){
+    function pathDialog(){
         exposedFunctions("dialog").showDialog({
             properties: ["openDirectory", "createDirectory", "promptToCreate", "dontAddToRecent"],
+            defaultPath: props.value as string
+        }).then((data: {canceled: boolean, filePaths: string[]}) => {
+            if(data.canceled) return
+            props.onChange(data.filePaths[0])
+        })
+    }
+
+    function fileDialog(){
+        exposedFunctions("dialog").showDialog({
+            properties: ["openFile", "createDirectory", "promptToCreate", "dontAddToRecent"],
+            defaultPath: props.value as string,
+            patterns: [
+                {name: "All Files", extensions: ["*"]}
+            ]
         }).then((data: {canceled: boolean, filePaths: string[]}) => {
             if(data.canceled) return
             props.onChange(data.filePaths[0])
@@ -27,6 +41,16 @@ function SettingsInput(props: SettingsInputProps){
             <td className="pt-3">{props.name}</td>
             <td className="flex-grow-1">
                 {props.type === "path" ? (
+                    <TextField
+                        sx={{width: "100%"}}
+                        variant="standard"
+                        aria-labelledby={id}
+                        type="text"
+                        value={props.value}
+                        onChange={(e) => props.onChange(e.target.value)}
+                        onClick={pathDialog}
+                    />
+                ) : props.type === "file" ? (
                     <TextField
                         sx={{width: "100%"}}
                         variant="standard"
@@ -166,7 +190,7 @@ function Settings(){
                     <tbody>
                         <tr>
                             <SettingsInput name="Minecraft Path" type="path" value={mcPath!} onChange={(v) => setMcPath(v as string)} />
-                            <SettingsInput name="Java Path" type="path" value={javaPath!} onChange={(v) => setJavaPath(v as string)} />
+                            <SettingsInput name="Java Path" type="file" value={javaPath!} onChange={(v) => setJavaPath(v as string)} />
                         </tr>
                         <tr>
                             <SettingsInput name="SplashScreen Width" type="number" value={width} onChange={(v) => setWidth(v as number)} />

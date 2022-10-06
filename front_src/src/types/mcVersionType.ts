@@ -12,5 +12,9 @@ interface McVersionResponseType{
     }
     versions: McVersionType[];
 }
+interface McLcVersionType{
+    number: string;
+    type: "release" | "snapshot" | "old_beta" | "old_alpha";
+}
 
-export type {McVersionType, McVersionResponseType};
+export type {McVersionType, McVersionResponseType, McLcVersionType};

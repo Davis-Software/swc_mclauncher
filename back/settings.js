@@ -1,11 +1,18 @@
 const fs = require("fs")
 const path = require("path")
 const {appDataDir} = require("./config")
+const {findJava} = require("./utils");
 
 class Settings {
     constructor(){
         this.settings = {
-            "credentials": null
+            credentials: null,
+            ram: 1024,
+            mcPath: path.join(appDataDir, "..", ".minecraft_swc"),
+            javaPath: findJava(),
+            "splash-width": "1280",
+            "splash-height": "720",
+            "launch-args": ""
         }
         this.load()
     }

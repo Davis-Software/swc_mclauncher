@@ -3,10 +3,11 @@ import PageBase from "./PageBase";
 import Pane from "../components/Pane";
 import {LaunchBarCustomContent, LaunchBarListContent} from "../components/LaunchBarComponents";
 import {Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
-import {McVersionResponseType, McVersionType} from "../types/mcVersionType";
+import {McLcVersionType, McVersionResponseType, McVersionType} from "../types/mcVersionType";
 import {getSetting} from "../utils/settings";
 import {loadMCVersions} from "../utils/info-loader";
 import {compareVersions, validate} from "compare-versions";
+import {exposedFunctions} from "../utils/constants";
 
 function MinecraftVanillaLaunchBar(){
     const [ramSetting, setRamSetting] = React.useState<number>(0)
@@ -42,6 +43,14 @@ function MinecraftVanillaLaunchBar(){
 
     function handleVersionChange(event: SelectChangeEvent) {
         setVersion(event.target.value as string);
+    }
+
+    function handleButtonClick(){
+        let versionInfo: McLcVersionType = {
+            number: version,
+            type: mcVersions.find((v: McVersionType) => v.id === version)!.type
+        }
+        exposedFunctions("mc").launchVanilla(versionInfo)
     }
 
     function MenuItemContent({version}: {version: McVersionType}){
@@ -97,6 +106,7 @@ function MinecraftVanillaLaunchBar(){
                     color="success"
                     fullWidth
                     className="attach-candle btn-outline-success"
+                    onClick={handleButtonClick}
                 >
                     {version === "" ? "Select a version" : "Play"}
                 </Button>

@@ -43,6 +43,16 @@ contextBridge.exposeInMainWorld("dialog", {
         return ipcRenderer.invoke("dialog:askLogin")
     }
 })
+contextBridge.exposeInMainWorld("mc", {
+    launchVanilla: (version) => {
+        return ipcRenderer.invoke("mc:launchVanilla", version)
+    },
+    on(event){
+        return new Promise((resolve) => {
+            ipcRenderer.on(`mc:${event}`, (e, d) => resolve(d))
+        })
+    }
+})
 contextBridge.exposeInMainWorld("settings", {
     get: async (key) => {
         return await ipcRenderer.invoke("settings:get", key)
