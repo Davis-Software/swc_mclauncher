@@ -52,6 +52,9 @@ function UserDropdown(props: UserDropdownProps) {
                     <ListItem page="profile" />
                     <ListDivider />
                     <ListItem page="settings" />
+                    <ListItem page="about" />
+                    <ListDivider />
+                    <ListItem page="switch" classes={["text-warning"]} />
                     <ListItem page={null} classes={["text-danger"]} />
                 </ul>
             </div>

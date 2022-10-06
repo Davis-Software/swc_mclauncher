@@ -7,6 +7,8 @@ import ModPack from "./ModPack";
 import {GridView} from "@mui/icons-material";
 import MinecraftVanilla, {MinecraftVanillaLaunchBar} from "./MinecraftVanilla";
 import Profile from "./Profile";
+import SwitchAccount from "./other/SwitchAccount";
+import About from "./other/About";
 
 async function loadModPacks() {
     let packs = await (await fetch("https://projects.software-city.org/resources/minecraft/modded/modpacks/packs.json")).json()
@@ -62,6 +64,18 @@ let pageMapping: pageMappingInterface = {
         component: <Settings />,
         name: "Settings",
         path: "?settings",
+        hide: true
+    },
+    "about": {
+        component: <About />,
+        name: "About",
+        path: "?about",
+        hide: true
+    },
+    "switch": {
+        component: <SwitchAccount />,
+        name: "Switch Account",
+        path: "?switch",
         hide: true
     }
 }
