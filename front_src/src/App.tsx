@@ -11,6 +11,8 @@ import LaunchBarPane from "./components/LaunchBarPane";
 
 
 function App(){
+    const [actionsDisabled, setActionsDisabled] = React.useState<boolean>(false)
+
     const [userData, setUserData] = React.useState<UserInterface | null | undefined>(undefined);
     const [modPacks, setModPacks] = React.useState<pageMappingInterface | null>(null)
     const [page, setPage] = React.useState<string>("overview")
@@ -36,19 +38,33 @@ function App(){
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            {userData && <UserDropdown user={userData} pageChange={setPage} userDataChange={setUserData} />}
+            {userData && <UserDropdown
+                user={userData}
+                pageChange={setPage}
+                userDataChange={setUserData}
+                disabled={actionsDisabled}
+            />}
             {userData === null ? (
                 <Login pageChange={setPage} userDataChange={setUserData} />
             ) : (
                 userData ? (
                     <Box display="flex" sx={{height: "100%"}}>
-                        <Sidebar page={page} pageChange={setPage} modPacks={modPacks} />
+                        <Sidebar
+                            page={page}
+                            pageChange={setPage}
+                            modPacks={modPacks}
+                            disableSidebar={actionsDisabled}
+                        />
 
                         {pageMapping[page] ? pageMapping[page].component : modPacks![page].component}
 
                         <Slide in={pageMapping[page] ? !!pageMapping[page].launchBar : !!modPacks![page].launchBar} direction="up">
                             <div className="launch-pane-container">
-                                <LaunchBarPane children={pageMapping[page] ? pageMapping[page].launchBar : modPacks![page].launchBar} />
+                                <LaunchBarPane
+                                    children={pageMapping[page] ? pageMapping[page].launchBar : modPacks![page].launchBar}
+                                    disabled={actionsDisabled}
+                                    setDisabled={setActionsDisabled}
+                                />
                             </div>
                         </Slide>
                     </Box>

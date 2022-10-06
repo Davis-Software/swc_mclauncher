@@ -9,12 +9,12 @@ interface UserDropdownProps {
     user: UserInterface | null | undefined;
     pageChange: (page: string) => void;
     userDataChange: (user: UserInterface | null) => void;
-    disable?: boolean;
+    disabled?: boolean;
 }
 function UserDropdown(props: UserDropdownProps) {
     function ListItem({page, classes = []}: {page: string | null, classes?: string[]}) {
         classes.push("dropdown-item", "attach-candle")
-        if(props.disable) classes.push("disabled")
+        if(props.disabled) classes.push("disabled")
 
         function handleClick() {
             if(page) {
@@ -36,7 +36,7 @@ function UserDropdown(props: UserDropdownProps) {
         return (
             <div className="dropdown">
                 <Button
-                    disabled={props.disable}
+                    disabled={props.disabled}
                     className="button dropdown-toggle attach-candle"
                     id="dropdownMenuButton1"
                     data-bs-toggle="dropdown"

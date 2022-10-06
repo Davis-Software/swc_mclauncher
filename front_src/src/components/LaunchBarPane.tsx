@@ -20,6 +20,8 @@ function renderLaunchBarPane(content: LaunchPaneProps["children"]) {
 
 interface LaunchPaneProps {
     children: React.ReactNode | React.ReactNode[]
+    disabled?: boolean
+    setDisabled?: (disabled: boolean) => void
     [key: string]: any
 }
 function LaunchBarPane(props: LaunchPaneProps){
