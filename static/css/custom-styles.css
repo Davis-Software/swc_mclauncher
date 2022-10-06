@@ -113,6 +113,14 @@
 .dropdown-menu .dropdown-item:hover{
     background-color: rgba(255, 255, 255, 0.08);
 }
+.dropdown-menu hr.dropdown-divider{
+    height: 1px;
+    margin: 0;
+    border-width: 0;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.12);
+    border-bottom-width: thin;
+}
 .dropdown-menu li:first-child .dropdown-item{
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
