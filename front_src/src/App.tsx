@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect} from "react"
 import {Box, Slide, ThemeProvider} from "@mui/material";
 import defaultTheme from "./themes/defaultTheme";
 import Sidebar from "./components/Sidebar";

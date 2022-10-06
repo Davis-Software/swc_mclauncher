@@ -1,9 +1,9 @@
 import React, {useEffect} from "react"
 import PageBase from "./PageBase";
 import Pane from "../components/Pane";
-import {LaunchBarCustomContent, LaunchBarListContentRight} from "../components/LaunchBarComponents";
+import {LaunchBarCustomContent, LaunchBarListContent} from "../components/LaunchBarComponents";
 import {Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
-import {McVersionResponseType, McVersionType} from "../types/mcVersionType";
+import {McVersionResponseType} from "../types/mcVersionType";
 import {getSetting} from "../utils/settings";
 import {loadMCVersions} from "../utils/info-loader";
 
@@ -49,16 +49,16 @@ function MinecraftVanillaLaunchBar(){
                 </FormControl>
             </LaunchBarCustomContent>
 
-            <LaunchBarCustomContent className="mx-3">
+            <LaunchBarCustomContent>
                 <Button variant="contained" color="success" sx={{height: "100%"}} disabled={version === ""} fullWidth>
                     {version === "" ? "Select a version" : "Play"}
                 </Button>
             </LaunchBarCustomContent>
 
-            <LaunchBarListContentRight>
+            <LaunchBarListContent right>
                 <li>Version: {version !== "" ? version : "N/A"}</li>
                 <li>Memory: {(ramSetting / 1024).toFixed(1)}GB</li>
-            </LaunchBarListContentRight>
+            </LaunchBarListContent>
         </>
     )
 }

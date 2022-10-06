@@ -2,21 +2,13 @@ import React from "react";
 
 interface LaunchBarContentProps {
     children: React.ReactNode | React.ReactNode[]
-    [key: string]: any
+    right?: boolean
+    childProps?: React.HTMLAttributes<HTMLDivElement>
 }
-function LaunchBarListContentLeft(props: LaunchBarContentProps){
+function LaunchBarListContent(props: LaunchBarContentProps){
     return (
-        <div {...props}>
-            <ul className="list-unstyled p-0">
-                {props.children}
-            </ul>
-        </div>
-    )
-}
-function LaunchBarListContentRight(props: LaunchBarContentProps){
-    return (
-        <div {...props} className="text-end">
-            <ul className="list-unstyled p-0">
+        <div {...props.childProps}>
+            <ul className={"list-unstyled p-0"} style={props.right ? {textAlign: "right"} : {}}>
                 {props.children}
             </ul>
         </div>
@@ -24,10 +16,10 @@ function LaunchBarListContentRight(props: LaunchBarContentProps){
 }
 function LaunchBarCustomContent(props: LaunchBarContentProps){
     return (
-        <div {...props}>
+        <div {...props.childProps}>
             {props.children}
         </div>
     )
 }
 
-export { LaunchBarListContentLeft, LaunchBarListContentRight, LaunchBarCustomContent }
+export { LaunchBarListContent, LaunchBarCustomContent }
