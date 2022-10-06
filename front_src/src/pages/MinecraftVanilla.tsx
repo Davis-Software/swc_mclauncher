@@ -70,7 +70,7 @@ function MinecraftVanillaLaunchBar(){
     return (
         <>
             <LaunchBarCustomContent>
-                <FormControl variant="filled" sx={{minWidth: "60%", maxWidth: "90%"}}>
+                <FormControl variant="standard" sx={{minWidth: "60%", maxWidth: "90%"}}>
                     <InputLabel id="mc-vanilla-version-select">Minecraft Version</InputLabel>
                     <Select
                         labelId="mc-vanilla-version-select"
