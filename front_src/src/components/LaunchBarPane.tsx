@@ -22,11 +22,10 @@ interface LaunchPaneProps {
     children: React.ReactNode | React.ReactNode[]
     disabled?: boolean
     setDisabled?: (disabled: boolean) => void
-    [key: string]: any
 }
 function LaunchBarPane(props: LaunchPaneProps){
     return (
-        <div className="launch-pane" {...props}>
+        <div className="launch-pane">
             {renderLaunchBarPane(props.children)}
         </div>
     )
