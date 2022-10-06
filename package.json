@@ -19,12 +19,12 @@
         "dist": "electron-builder --x64 --win"
     },
     "devDependencies": {
-        "electron": "^21.0.1",
+        "electron": "^21.1.0",
         "electron-builder": "^23.3.3"
     },
     "dependencies": {
-        "msmc": "^4.0.0-pre7",
+        "markdown-it": "^13.0.1",
         "minecraft-launcher-core": "^3.16.16",
-        "markdown-it": "^13.0.1"
+        "msmc": "^4.0.0-pre7"
     }
 }
