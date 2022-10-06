@@ -13,13 +13,13 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.6",
-    "@mui/material": "^5.10.7",
+    "@mui/material": "^5.10.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
-    "@types/node": "^18.8.0",
+    "@types/node": "^18.8.2",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "ts-loader": "^9.4.1",
