@@ -63,7 +63,6 @@ function App(){
                                 <LaunchBarPane
                                     children={pageMapping[page] ? pageMapping[page].launchBar : modPacks![page].launchBar}
                                     disabled={actionsDisabled}
-                                    setDisabled={setActionsDisabled}
                                 />
                             </div>
                         </Slide>
