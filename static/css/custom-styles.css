@@ -37,6 +37,27 @@
     width: 100%;
 }
 
+.launch-progress-container{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+}
+.launch-progress-container .launch-progress-pane{
+    position: relative;
+    background-color: rgba(0, 0, 0, .6);
+    backdrop-filter: blur(4px);
+    margin-left: 300px;
+    height: 40px;
+    text-align: center;
+}
+.launch-progress-container .launch-progress-pane .info-text{
+    width: 100%;
+    top: 10px;
+    left: 0;
+    position: absolute;
+}
+
 .pane.dark{
     background-color: rgba(0, 0, 0, .4);
 }

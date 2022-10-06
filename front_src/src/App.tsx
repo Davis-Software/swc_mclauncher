@@ -8,10 +8,12 @@ import Login from "./pages/other/Login";
 import UserDropdown from "./components/UserDropdown";
 import {UserInterface} from "./types/userInterface";
 import LaunchBarPane from "./components/LaunchBarPane";
+import LaunchProgressPane from "./components/LaunchProgressPane";
 
 
 function App(){
     const [actionsDisabled, setActionsDisabled] = React.useState<boolean>(false)
+    const [launching, setLaunching] = React.useState<boolean>(false)
 
     const [userData, setUserData] = React.useState<UserInterface | null | undefined>(undefined);
     const [modPacks, setModPacks] = React.useState<pageMappingInterface | null>(null)
@@ -66,6 +68,13 @@ function App(){
                                 />
                             </div>
                         </Slide>
+
+                        <Slide in={launching} direction="up">
+                            <div className="launch-progress-container">
+                                <LaunchProgressPane setDisabled={setActionsDisabled} />
+                            </div>
+                        </Slide>
+
                     </Box>
                 ) : <></>
             )}
