@@ -1,6 +1,6 @@
 interface McVersionType{
-    id: string | null;
-    type: "release" | "snapshot" | "old_beta" | "old_alpha" | "unset";
+    id: string;
+    type: "release" | "snapshot" | "old_beta" | "old_alpha";
     url?: string;
     time?: string;
     releaseTime?: string;

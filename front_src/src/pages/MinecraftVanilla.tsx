@@ -3,30 +3,68 @@ import PageBase from "./PageBase";
 import Pane from "../components/Pane";
 import {LaunchBarCustomContent, LaunchBarListContent} from "../components/LaunchBarComponents";
 import {Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
-import {McVersionResponseType} from "../types/mcVersionType";
+import {McVersionResponseType, McVersionType} from "../types/mcVersionType";
 import {getSetting} from "../utils/settings";
 import {loadMCVersions} from "../utils/info-loader";
+import {compareVersions, validate} from "compare-versions";
 
 function MinecraftVanillaLaunchBar(){
     const [ramSetting, setRamSetting] = React.useState<number>(0)
     const [mcVersionsData, setMcVersionsData] = React.useState<McVersionResponseType | null>(null)
+    const [mcVersions, setMcVersions] = React.useState<McVersionType[]>([])
     const [version, setVersion] = React.useState<string>("")
 
+    const [versionDropdownOpen, setVersionDropdownOpen] = React.useState<boolean>(false)
+
     useEffect(() => {
-        loadMCVersions().then((data: McVersionResponseType) => {
-            setMcVersionsData(data)
-            setVersion(localStorage.getItem("vanillaMcVersion") || "")
-        })
+        loadMCVersions().then(setMcVersionsData)
         getSetting("ram").then(setRamSetting)
     }, [])
     useEffect(() => {
-        if(version !== ""){
-            localStorage.setItem("vanillaMcVersion", version)
+        if(!mcVersionsData) return
+
+        let versions: McVersionType[] = []
+
+        for(let versionType of ["release", "snapshot", "old_beta", "old_alpha"]){
+            let vs = mcVersionsData.versions.filter((version: McVersionType) => version.type === versionType)
+            vs.sort((a: McVersionType, b: McVersionType) => {
+                return (validate(a.id) && validate(b.id)) ? compareVersions(b.id, a.id) : 0
+            }).forEach((version: McVersionType) => versions.push(version))
         }
+
+        setMcVersions(versions)
+        setVersion(localStorage.getItem("vanillaMcVersion") || "")
+    }, [mcVersionsData])
+    useEffect(() => {
+        if(version === "") return
+        localStorage.setItem("vanillaMcVersion", version)
     }, [version])
 
     function handleVersionChange(event: SelectChangeEvent) {
         setVersion(event.target.value as string);
+    }
+
+    function MenuItemContent({version}: {version: McVersionType}){
+        let colors = {
+            release: "text-success",
+            snapshot: "text-info",
+            old_beta: "text-warning",
+            old_alpha: "text-danger"
+        }
+
+        return (
+            <>
+                <span>{version.id}{versionDropdownOpen && <span style={{color: "transparent"}}> {version.type}</span>}</span>
+                {versionDropdownOpen &&
+                    <span
+                        className={colors[version.type]}
+                        style={{position: "absolute", right: "15px"}}
+                    >
+                        {version.type}
+                    </span>
+                }
+            </>
+        )
     }
 
     return (
@@ -39,10 +77,12 @@ function MinecraftVanillaLaunchBar(){
                         id="mc-vanilla-version-select"
                         value={version}
                         onChange={handleVersionChange}
+                        onOpen={() => setVersionDropdownOpen(true)}
+                        onClose={() => setVersionDropdownOpen(false)}
                     >
-                        {mcVersionsData?.versions.map((version, index) => (
-                            <MenuItem value={version.id || "unset"} key={index}>
-                                {version.type}: {version.id}
+                        {mcVersions.map((version, index) => (
+                            <MenuItem className="attach-candle" value={version.id} key={index}>
+                                <MenuItemContent version={version} />
                             </MenuItem>
                         ))}
                     </Select>
@@ -50,7 +90,14 @@ function MinecraftVanillaLaunchBar(){
             </LaunchBarCustomContent>
 
             <LaunchBarCustomContent>
-                <Button variant="contained" color="success" sx={{height: "100%"}} disabled={version === ""} fullWidth>
+                <Button
+                    variant="outlined"
+                    sx={{height: "100%"}}
+                    disabled={version === ""}
+                    color="success"
+                    fullWidth
+                    className="attach-candle btn-outline-success"
+                >
                     {version === "" ? "Select a version" : "Play"}
                 </Button>
             </LaunchBarCustomContent>
