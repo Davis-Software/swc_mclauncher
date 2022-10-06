@@ -1,36 +1,33 @@
-import {Button} from "@mui/material";
 import React from "react";
 
-function LaunchBarButton(){
-    return (
-        <div style={{flexGrow: 1, display: "flex", justifyContent: "center"}}>
-            <Button variant="contained" color="success" sx={{width: "20vw"}}>
-                Play
-            </Button>
-        </div>
-    )
+interface LaunchBarContentProps {
+    children: React.ReactNode | React.ReactNode[]
+    [key: string]: any
 }
-
-function LaunchBarContentLeft(){
+function LaunchBarListContentLeft(props: LaunchBarContentProps){
     return (
-        <div>
+        <div {...props}>
             <ul className="list-unstyled p-0">
-                <li>Mod pack name</li>
-                <li>Mod pack description</li>
+                {props.children}
             </ul>
         </div>
     )
 }
-
-function LaunchBarContentRight(){
+function LaunchBarListContentRight(props: LaunchBarContentProps){
     return (
-        <div className="text-end">
+        <div {...props} className="text-end">
             <ul className="list-unstyled p-0">
-                <li>Mod pack name</li>
-                <li>Mod pack description</li>
+                {props.children}
             </ul>
         </div>
     )
 }
+function LaunchBarCustomContent(props: LaunchBarContentProps){
+    return (
+        <div {...props}>
+            {props.children}
+        </div>
+    )
+}
 
-export { LaunchBarButton, LaunchBarContentLeft, LaunchBarContentRight }
+export { LaunchBarListContentLeft, LaunchBarListContentRight, LaunchBarCustomContent }

@@ -1,4 +1,22 @@
 import React from "react";
+import {TransitionGroup} from "react-transition-group";
+import {Fade} from "@mui/material";
+
+function renderLaunchBarPane(content: LaunchPaneProps["children"]) {
+    function Render(){
+        return (
+            <TransitionGroup component={null}>
+                <Fade>
+                    <div className="launch-pane-inner">
+                        {content}
+                    </div>
+                </Fade>
+            </TransitionGroup>
+        )
+    }
+
+    return <Render />
+}
 
 interface LaunchPaneProps {
     children: React.ReactNode | React.ReactNode[]
@@ -6,13 +24,8 @@ interface LaunchPaneProps {
 }
 function LaunchBarPane(props: LaunchPaneProps){
     return (
-        <div className="launch-pane" style={{
-            marginLeft: "300px",
-            display: "flex",
-            justifyContent: "space-evenly",
-            height: "100px",
-        }} {...props}>
-            {props.children}
+        <div className="launch-pane" {...props}>
+            {renderLaunchBarPane(props.children)}
         </div>
     )
 }

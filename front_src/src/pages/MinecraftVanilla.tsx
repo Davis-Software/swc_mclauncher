@@ -1,14 +1,64 @@
-import React from "react"
+import React, {useEffect} from "react"
 import PageBase from "./PageBase";
 import Pane from "../components/Pane";
-import {LaunchBarButton, LaunchBarContentLeft, LaunchBarContentRight} from "../components/LaunchBarComponents";
+import {LaunchBarCustomContent, LaunchBarListContentRight} from "../components/LaunchBarComponents";
+import {Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {McVersionResponseType, McVersionType} from "../types/mcVersionType";
+import {getSetting} from "../utils/settings";
+import {loadMCVersions} from "../utils/info-loader";
 
 function MinecraftVanillaLaunchBar(){
+    const [ramSetting, setRamSetting] = React.useState<number>(0)
+    const [mcVersionsData, setMcVersionsData] = React.useState<McVersionResponseType | null>(null)
+    const [version, setVersion] = React.useState<string>("")
+
+    useEffect(() => {
+        loadMCVersions().then((data: McVersionResponseType) => {
+            setMcVersionsData(data)
+            setVersion(localStorage.getItem("vanillaMcVersion") || "")
+        })
+        getSetting("ram").then(setRamSetting)
+    }, [])
+    useEffect(() => {
+        if(version !== ""){
+            localStorage.setItem("vanillaMcVersion", version)
+        }
+    }, [version])
+
+    function handleVersionChange(event: SelectChangeEvent) {
+        setVersion(event.target.value as string);
+    }
+
     return (
         <>
-            <LaunchBarContentLeft />
-            <LaunchBarButton />
-            <LaunchBarContentRight />
+            <LaunchBarCustomContent>
+                <FormControl variant="filled" sx={{minWidth: "60%", maxWidth: "90%"}}>
+                    <InputLabel id="mc-vanilla-version-select">Minecraft Version</InputLabel>
+                    <Select
+                        labelId="mc-vanilla-version-select"
+                        id="mc-vanilla-version-select"
+                        value={version}
+                        onChange={handleVersionChange}
+                    >
+                        {mcVersionsData?.versions.map((version, index) => (
+                            <MenuItem value={version.id || "unset"} key={index}>
+                                {version.type}: {version.id}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </LaunchBarCustomContent>
+
+            <LaunchBarCustomContent className="mx-3">
+                <Button variant="contained" color="success" sx={{height: "100%"}} disabled={version === ""} fullWidth>
+                    {version === "" ? "Select a version" : "Play"}
+                </Button>
+            </LaunchBarCustomContent>
+
+            <LaunchBarListContentRight>
+                <li>Version: {version !== "" ? version : "N/A"}</li>
+                <li>Memory: {(ramSetting / 1024).toFixed(1)}GB</li>
+            </LaunchBarListContentRight>
         </>
     )
 }

@@ -43,9 +43,11 @@ function App(){
                 userData ? (
                     <Box display="flex" sx={{height: "100%"}}>
                         <Sidebar page={page} pageChange={setPage} modPacks={modPacks} />
+
                         {pageMapping[page] ? pageMapping[page].component : modPacks![page].component}
+
                         <Slide in={pageMapping[page] ? !!pageMapping[page].launchBar : !!modPacks![page].launchBar} direction="up">
-                            <div className="position-absolute w-100" style={{bottom: "0", right: "0"}}>
+                            <div className="launch-pane-container">
                                 <LaunchBarPane children={pageMapping[page] ? pageMapping[page].launchBar : modPacks![page].launchBar} />
                             </div>
                         </Slide>
