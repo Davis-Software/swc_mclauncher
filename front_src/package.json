@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config config/webpack.config.js"
+    "build": "webpack --config config/webpack.config.js",
+    "build:prod": "webpack --config config/webpack-build-only.config.js"
   },
   "author": "Davis_Software",
   "license": "MIT",
