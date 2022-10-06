@@ -17,6 +17,7 @@ interface SidebarProps {
     page: string;
     pageChange: (page: string) => void;
     modPacks: pageMappingInterface | null;
+    disableSidebar?: boolean;
 }
 function Sidebar(props: SidebarProps) {
     return (
@@ -39,6 +40,7 @@ function Sidebar(props: SidebarProps) {
             <List>
                 {Object.keys(pageMapping).filter(i => !pageMapping[i].hide).map((key, index) => (
                     <ListItemButton
+                        disabled={props.disableSidebar}
                         className="attach-candle"
                         sx={{
                             paddingLeft: props.page === key ? "30px" : "16px",
@@ -57,6 +59,7 @@ function Sidebar(props: SidebarProps) {
                 <Divider />
                 {props.modPacks && Object.keys(props.modPacks).map((key, index) => (
                     <ListItemButton
+                        disabled={props.disableSidebar}
                         className="attach-candle"
                         sx={{
                             paddingLeft: props.page === key ? "30px" : "16px",
