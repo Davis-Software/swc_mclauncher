@@ -20,7 +20,5 @@ module.exports = {
                 exclude: /node_modules$/
             }
         ]
-    },
-
-    devtool: "none"
+    }
 }

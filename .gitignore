@@ -5,6 +5,7 @@ front_src/node_modules/
 
 static/js/views/main.js
 static/js/views/main.js.map
+static/js/views/main.js.LICENSE.txt
 
 dist/
 build/

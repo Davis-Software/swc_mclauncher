@@ -15,7 +15,7 @@ function SettingsInput(props: SettingsInputProps){
 
     function pathDialog(){
         exposedFunctions("dialog").showDialog({
-            properties: ["openDirectory", "createDirectory", "promptToCreate", "dontAddToRecent"],
+            properties: ["openDirectory", "createDirectory", "dontAddToRecent"],
             defaultPath: props.value as string
         }).then((data: {canceled: boolean, filePaths: string[]}) => {
             if(data.canceled) return
@@ -25,7 +25,7 @@ function SettingsInput(props: SettingsInputProps){
 
     function fileDialog(){
         exposedFunctions("dialog").showDialog({
-            properties: ["openFile", "createDirectory", "promptToCreate", "dontAddToRecent"],
+            properties: ["openFile", "createDirectory", "dontAddToRecent"],
             defaultPath: props.value as string,
             patterns: [
                 {name: "All Files", extensions: ["*"]}
