@@ -3,7 +3,7 @@ import Home from "./Home";
 import HomeIcon from "@mui/icons-material/Home";
 import React from "react";
 import Settings from "./Settings";
-import ModPack from "./ModPack";
+import ModPack, {ModPackLaunchBar} from "./ModPack";
 import {GridView} from "@mui/icons-material";
 import MinecraftVanilla, {MinecraftVanillaLaunchBar} from "./MinecraftVanilla";
 import Profile from "./Profile";
@@ -16,7 +16,7 @@ async function loadModPacks() {
     Array.from(packs).forEach((pack: any) => {
         packsOut[pack.id] = {
             component: <ModPack key={pack.id} modPack={pack} />,
-            launchBar: <>{pack.name}</>,
+            launchBar: <ModPackLaunchBar key={pack.id + "-bar"} modPack={pack} />,
             name: pack.name,
             path: "?/mod-packs/" + pack.name,
             data: pack
