@@ -1,20 +1,19 @@
 const {auth} = require('msmc')
 const settings = require("./settings");
-const {registerIpcListener} = require("./ipc-handler");
+const {registerIpcListener, invoke} = require("./ipc-handler");
 const {Client} = require('minecraft-launcher-core')
-const path = require("path");
 
 
 function askLogin() {
-    const msmc = new auth('select_account')
+    const msMc = new auth('select_account')
 
     return new Promise((resolve) => {
-        msmc.on('load', console.log).launch('electron').then(async e => {
+        msMc.on('load', console.log).launch('electron').then(async e => {
             const mc = await e.getMinecraft()
-            let creds = mc.mclc()
+            let credentials = mc.mclc()
 
-            settings.set("credentials", creds)
-            resolve(creds)
+            settings.set("credentials", credentials)
+            resolve(credentials)
         }).catch(() => {resolve(null)})
     })
 }
@@ -43,14 +42,22 @@ function launchVanilla(version) {
         }
     }
 
+    invoke("mc:initGame")
+
     launcher.launch(opts).then(() => {
-        console.log('launching')
+        invoke("mc:gameLaunched")
     }).catch((e) => {
-        console.log(e)
+        invoke("mc:gameLaunchError", e)
     })
 
-    launcher.on('debug', (e) => console.log(e))
-    launcher.on('data', (e) => console.log(e))
+    launcher.on('arguments', (e) => invoke("mc:arguments", e))
+    launcher.on('data', (e) => invoke("mc:data", e))
+    launcher.on('close', (e) => invoke("mc:close", e))
+    launcher.on('package-extract', (e) => invoke("mc:package-extract", e))
+    launcher.on('download', (e) => invoke("mc:download", e))
+    launcher.on('download-status', (e) => invoke("mc:download-status", e))
+    launcher.on('debug', (e) => invoke("mc:debug", e))
+    launcher.on('progress', (e) => invoke("mc:progress", e))
 }
 
 registerIpcListener("dialog:askLogin", askLogin)
@@ -58,6 +65,5 @@ registerIpcListener("dialog:logout", logout)
 registerIpcListener("mc:launchVanilla", (e, v) => launchVanilla(v))
 
 module.exports = {
-    askLogin,
-    logout
+    askLogin
 }

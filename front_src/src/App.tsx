@@ -20,15 +20,18 @@ function App(){
     const [page, setPage] = React.useState<string>("overview")
 
     useEffect(() => {
-        loadModPacks().then(setModPacks)
-    }, [])
-
-    useEffect(() => {
         window.addEventListener("popstate", () => {
             setPage(window.location.search.substring(1))
         })
+
+        loadModPacks().then(setModPacks)
         getSetting("credentials").then(setUserData)
     }, [])
+
+    useEffect(() => {
+        setActionsDisabled(launching)
+    }, [launching])
+
     useEffect(() => {
         if(window.location.search.substring(1) === page) return
         history.pushState(
@@ -60,7 +63,10 @@ function App(){
 
                         {pageMapping[page] ? pageMapping[page].component : modPacks![page].component}
 
-                        <Slide in={pageMapping[page] ? !!pageMapping[page].launchBar : !!modPacks![page].launchBar} direction="up">
+                        <Slide in={
+                            (pageMapping[page] ? !!pageMapping[page].launchBar : !!modPacks![page].launchBar)
+                            && !launching
+                        } direction="up">
                             <div className="launch-pane-container">
                                 <LaunchBarPane
                                     children={pageMapping[page] ? pageMapping[page].launchBar : modPacks![page].launchBar}
@@ -71,10 +77,9 @@ function App(){
 
                         <Slide in={launching} direction="up">
                             <div className="launch-progress-container">
-                                <LaunchProgressPane setDisabled={setActionsDisabled} />
+                                <LaunchProgressPane setLaunching={setLaunching} />
                             </div>
                         </Slide>
-
                     </Box>
                 ) : <></>
             )}

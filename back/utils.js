@@ -2,7 +2,6 @@ const os = require("os");
 const {registerIpcListener} = require("./ipc-handler");
 const {platform} = require("./config");
 const child_process = require("child_process");
-const path = require("path");
 
 
 registerIpcListener("get-ram-amount", () => {
