@@ -19,11 +19,7 @@ function ModPackLaunchBar(props: ModPackLaunchBarProps){
     }, [])
 
     function handleButtonClick(){
-        let versionInfo: McLcVersionType = {
-            number: props.modPack.mcVersion,
-            type: "release"
-        }
-        exposedFunctions("mc").launchVanilla(versionInfo)
+        exposedFunctions("mc").launchModded(props.modPack)
     }
 
     return (

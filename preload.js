@@ -47,6 +47,9 @@ contextBridge.exposeInMainWorld("mc", {
     launchVanilla: (version) => {
         return ipcRenderer.invoke("mc:launchVanilla", version)
     },
+    launchModded: (modPack) => {
+        return ipcRenderer.invoke("mc:launchModded", modPack)
+    },
     on(event, callback){
         ipcRenderer.on(`mc:${event}`, (e, ...args) => callback(...args))
     }

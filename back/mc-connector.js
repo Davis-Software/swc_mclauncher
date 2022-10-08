@@ -60,9 +60,14 @@ function launchVanilla(version) {
     launcher.on('progress', (e) => invoke("mc:progress", e))
 }
 
+function launchModded(modPack) {
+    invoke("mc:gameLaunchError", "Modded launch is not supported yet.")
+}
+
 registerIpcListener("dialog:askLogin", askLogin)
 registerIpcListener("dialog:logout", logout)
 registerIpcListener("mc:launchVanilla", (e, v) => launchVanilla(v))
+registerIpcListener("mc:launchModded", (e, v) => launchModded(v))
 
 module.exports = {
     askLogin

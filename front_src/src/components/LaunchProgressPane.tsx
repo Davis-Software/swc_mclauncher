@@ -35,9 +35,10 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
             setInfo("Game launched!")
             setTimeout(() => setState(false), 2500)
         })
-        exposedFunctions("mc").on("gameLaunchError", () => {
+        exposedFunctions("mc").on("gameLaunchError", (e: string) => {
+            Logger.error(e)
             setError(<>
-                Game launch error.<br />Please check the console for more information. (Ctrl + Shift + I)
+                Game launch error.<br />{e} <br /><br /><br />Please check the console for more information. (Ctrl + Shift + I)
             </>)
             setShowError(true)
             setState(false)
