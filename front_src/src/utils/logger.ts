@@ -1,22 +1,31 @@
+import {getSettingSync} from "./settings";
+
+function printLog(message: string, level: string, active: boolean) {
+    if(!active) return;
+    // @ts-ignore
+    console[level](`[${level.toUpperCase()}] ${message}`)
+}
+
 class Logger{
-    private static _log(message: string, level: string){
-        // @ts-ignore
-        console[level](`[${level.toUpperCase()}] ${message}`)
+    _loggingActive: boolean;
+
+    constructor() {
+        this._loggingActive = (getSettingSync("loggingActive") === true);
     }
-    static debug(message: string){
-        Logger._log(message, 'debug')
+    debug(message: string){
+        printLog(message, 'debug', this._loggingActive)
     }
-    static log(message: string){
-        Logger._log(message, 'log')
+    log(message: string){
+        printLog(message, 'log', this._loggingActive)
     }
-    static info(message: string){
-        Logger._log(message, 'info')
+    info(message: string){
+        printLog(message, 'info', this._loggingActive)
     }
-    static warn(message: string){
-        Logger._log(message, 'warn')
+    warn(message: string){
+        printLog(message, 'warn', this._loggingActive)
     }
-    static error(message: string){
-        Logger._log(message, 'error')
+    error(message: string){
+        printLog(message, 'error', this._loggingActive)
     }
 }
 

@@ -108,6 +108,7 @@ function Settings(){
     const [showSnapshots, setShowSnapshots] = React.useState<boolean>(false)
     const [showBetaAndAlpha, setShowBetaAndAlpha] = React.useState<boolean>(false)
     const [launchArgs, setLaunchArgs] = React.useState<string>("")
+    const [debugLogging, setDebugLogging] = React.useState<boolean>(false)
 
 
     useEffect(() => {
@@ -126,6 +127,7 @@ function Settings(){
         getSettingBoolean("show-snapshots").then(setShowSnapshots)
         getSettingBoolean("show-beta-and-alpha").then(setShowBetaAndAlpha)
         getSetting("launch-args").then(setLaunchArgs)
+        getSettingBoolean("loggingActive").then(setDebugLogging)
     }, [])
 
 
@@ -134,7 +136,7 @@ function Settings(){
         setSetting("ram", ramSelected)
     }, [ramSelected])
     function valuetext(value: number) {
-        return `${value}MB`;
+        return `${(value / 1024).toFixed(1)}GB`;
     }
 
     useEffect(() => {
@@ -169,6 +171,9 @@ function Settings(){
     useEffect(() => {
         setSetting("launch-args", launchArgs)
     }, [launchArgs])
+    useEffect(() => {
+        setSetting("loggingActive", debugLogging)
+    }, [debugLogging])
 
     return (
         <PageBase>
@@ -182,6 +187,7 @@ function Settings(){
                         value={ramSelected!}
                         defaultValue={1024}
                         getAriaValueText={valuetext}
+                        valueLabelFormat={valuetext}
                         step={512}
                         valueLabelDisplay="auto"
                         min={1024}
@@ -221,13 +227,15 @@ function Settings(){
                 <SettingsCheckbox name="Show Vanilla Snapshots Versions" value={showSnapshots} onChange={setShowSnapshots} />
                 <SettingsCheckbox name="Show Vanilla Beta and Alpha Versions" value={showBetaAndAlpha} onChange={setShowBetaAndAlpha} />
 
-                <table className="table table-borderless mt-3">
+                <table className="table table-borderless mt-3 mb-3">
                     <tbody>
                         <tr>
                             <SettingsInput name="Java Launch Arguments" type="text" value={launchArgs} onChange={(v) => setLaunchArgs(v as string)} />
                         </tr>
                     </tbody>
                 </table>
+
+                <SettingsCheckbox name="Debug logging" value={debugLogging} onChange={setDebugLogging} />
             </div>
         </PageBase>
     )

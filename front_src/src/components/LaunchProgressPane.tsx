@@ -28,7 +28,18 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
     }
 
     useEffect(() => {
+        const logger = new Logger()
+
         exposedFunctions("mc").on("initGame", () => setState(true))
+        exposedFunctions("mc").on("packageMode", () => {
+            setLoadingState("query")
+            setInfo("Preparing package install...")
+        })
+        exposedFunctions("mc").on("packageInstall", () => {
+            setLoadingState("determinate")
+            setInfo("Getting package...")
+        })
+        exposedFunctions("mc").on("package-extract", () => setState(true))
         exposedFunctions("mc").on("gameLaunched", () => {
             setLoadingState("determinate")
             setProgress(100)
@@ -36,7 +47,7 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
             setTimeout(() => setState(false), 2500)
         })
         exposedFunctions("mc").on("gameLaunchError", (e: string) => {
-            Logger.error(e)
+            logger.error(e)
             setError(<>
                 Game launch error.<br />{e} <br /><br /><br />Please check the console for more information. (Ctrl + Shift + I)
             </>)
@@ -54,6 +65,14 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
 
         exposedFunctions("mc").on("download-status", (e: McLcDownloadStatus) => {
             if(e.type === "native") return
+            if(e.type === "client-package"){
+                setProgress(e.current / e.total * 100)
+                if(e.current === e.total) {
+                    setLoadingState("indeterminate")
+                    setInfo("Extracting package...")
+                }
+                return
+            }
             setBuffer(e.current / e.total * 100)
         })
         exposedFunctions("mc").on("progress", (e: McLcProgress) => {
@@ -62,8 +81,14 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
                     setLoadingState("query")
                     setInfo("Downloading natives...")
                     break
+                case "classes-custom":
+                    setLoadingState("buffer")
+                    setInfo(`Downloading custom classes... (${e.task}/${e.total})`)
+                    setProgress(e.task / e.total * 100)
+                    break
                 case "classes":
                 case "assets":
+                case "forge":
                     setLoadingState("buffer")
                     setInfo(`Downloading ${e.type}... (${e.task}/${e.total})`)
                     setProgress(e.task / e.total * 100)
@@ -71,9 +96,9 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
             }
         })
 
-        exposedFunctions("mc").on("arguments", Logger.info)
-        exposedFunctions("mc").on("debug", Logger.debug)
-        exposedFunctions("mc").on("data", Logger.log)
+        exposedFunctions("mc").on("arguments", logger.info)
+        exposedFunctions("mc").on("debug", logger.debug)
+        exposedFunctions("mc").on("data", logger.log)
     }, [])
 
     return (

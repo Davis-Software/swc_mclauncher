@@ -1,5 +1,5 @@
 interface McLcProgress {
-    type: "natives" | "classes" | "assets";
+    type: "natives" | "classes" | "assets" | "forge" | "classes-custom";
     task: number;
     total: number;
 }

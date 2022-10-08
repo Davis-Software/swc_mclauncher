@@ -34,7 +34,9 @@
         "markdown-it": "^13.0.1",
         "minecraft-launcher-core": "^3.16.16",
         "msmc": "^4.0.0-pre7",
-        "electron-updater": "^5.3.0"
+        "electron-updater": "^5.3.0",
+        "compare-versions": "^5.0.1",
+        "fs-extra": "^10.1.0"
     },
     "build": {
         "appId": "org.software-city.projects.swc_mclauncher",

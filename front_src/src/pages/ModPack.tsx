@@ -2,7 +2,6 @@ import React, {useEffect} from "react"
 import PageBase from "./PageBase";
 import {LaunchBarCustomContent, LaunchBarListContent} from "../components/LaunchBarComponents";
 import {Button} from "@mui/material";
-import {McLcVersionType} from "../types/mcVersionType";
 import {getSetting} from "../utils/settings";
 import {exposedFunctions} from "../utils/constants";
 import {ModPackType} from "../types/modPackType";
