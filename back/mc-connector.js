@@ -4,6 +4,9 @@ const {registerIpcListener, invoke} = require("./ipc-handler");
 const {Client} = require('minecraft-launcher-core')
 
 
+const runningClients = []
+
+
 function askLogin() {
     const msMc = new auth('select_account')
 
@@ -23,6 +26,8 @@ function logout(){
 
 function launchVanilla(version) {
     const launcher = new Client()
+    runningClients.push(launcher)
+
     const opts = {
         authorization: settings.get("credentials"),
         root: settings.get("mcPath"),
@@ -47,12 +52,16 @@ function launchVanilla(version) {
     launcher.launch(opts).then(() => {
         invoke("mc:gameLaunched")
     }).catch((e) => {
+        runningClients.splice(runningClients.indexOf(launcher), 1)
         invoke("mc:gameLaunchError", e)
     })
 
     launcher.on('arguments', (e) => invoke("mc:arguments", e))
     launcher.on('data', (e) => invoke("mc:data", e))
-    launcher.on('close', (e) => invoke("mc:close", e))
+    launcher.on('close', (e) => {
+        runningClients.splice(runningClients.indexOf(launcher), 1)
+        invoke("mc:close", e)
+    })
     launcher.on('package-extract', (e) => invoke("mc:package-extract", e))
     launcher.on('download', (e) => invoke("mc:download", e))
     launcher.on('download-status', (e) => invoke("mc:download-status", e))
