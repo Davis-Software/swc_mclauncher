@@ -27,6 +27,7 @@ function update_downloaded(){
     }
 }
 function update_error(error){
+    console.error(error)
     dialog.showErrorBox("Update error", error)
 }
 

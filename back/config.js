@@ -9,4 +9,5 @@ exports.appDataDir = app.getPath("userData")
 exports.tempDir = app.getPath("temp")
 exports.var = {}
 
-exports.devMode = true
+exports.devMode = false
+exports.autoUpdate = true

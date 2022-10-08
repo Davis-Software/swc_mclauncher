@@ -7,6 +7,7 @@ const {invoke, registerIpcListener, registerIpcListenerSync} = require("./back/i
 
 require("./back/mc-connector")
 require("./back/utils")
+const {autoUpdater} = require("electron-updater");
 
 
 let win
@@ -33,6 +34,10 @@ function MainWindow () {
 
     win.identifier = "main-window"
     require("./back/update-service")
+    if(!config.devMode && config.autoUpdate) {
+        autoUpdater.checkForUpdates().then()
+    }
+
     win.forceClose = () => {
         win.allowClose = true
         win.close()
