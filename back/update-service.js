@@ -10,6 +10,7 @@ autoUpdater.autoDownload = true
 autoUpdater.autoInstallOnAppQuit = true
 
 function update_available(info){
+    console.info(`Update available. - Currently running ${autoUpdater.currentVersion} - Latest is ${info.version}`)
     invoke("update:info", info)
 }
 function update_not_available(info){

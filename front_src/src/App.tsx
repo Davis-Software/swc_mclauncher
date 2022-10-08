@@ -9,6 +9,7 @@ import UserDropdown from "./components/UserDropdown";
 import {UserInterface} from "./types/userInterface";
 import LaunchBarPane from "./components/LaunchBarPane";
 import LaunchProgressPane from "./components/LaunchProgressPane";
+import UpdateInfo from "./components/UpdateInfo";
 
 
 function App(){
@@ -83,6 +84,7 @@ function App(){
                     </Box>
                 ) : <></>
             )}
+            <UpdateInfo />
         </ThemeProvider>
     )
 }
