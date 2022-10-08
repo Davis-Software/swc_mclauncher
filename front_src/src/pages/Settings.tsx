@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import PageBase from "./PageBase";
 import {Checkbox, FormControlLabel, Slider, TextField} from "@mui/material";
 import {exposedFunctions} from "../utils/constants";
-import {getSetting, setSetting} from "../utils/settings";
+import {getSetting, getSettingBoolean, setSetting} from "../utils/settings";
 
 interface SettingsInputProps {
     name: string
@@ -105,6 +105,8 @@ function Settings(){
     const [minimizeWhilePlaying, setMinimizeWhilePlaying] = React.useState<boolean>(false)
     const [closeOnGameExit, setCloseOnGameExit] = React.useState<boolean>(false)
 
+    const [showSnapshots, setShowSnapshots] = React.useState<boolean>(false)
+    const [showBetaAndAlpha, setShowBetaAndAlpha] = React.useState<boolean>(false)
     const [launchArgs, setLaunchArgs] = React.useState<string>("")
 
 
@@ -118,9 +120,11 @@ function Settings(){
         getSetting("splash-width").then(setWidth)
         getSetting("splash-height").then(setHeight)
 
-        getSetting("minimize-while-playing").then(setMinimizeWhilePlaying)
-        getSetting("close-on-game-exit").then(setCloseOnGameExit)
+        getSettingBoolean("minimize-while-playing").then(setMinimizeWhilePlaying)
+        getSettingBoolean("close-on-game-exit").then(setCloseOnGameExit)
 
+        getSettingBoolean("show-snapshots").then(setShowSnapshots)
+        getSettingBoolean("show-beta-and-alpha").then(setShowBetaAndAlpha)
         getSetting("launch-args").then(setLaunchArgs)
     }, [])
 
@@ -156,6 +160,12 @@ function Settings(){
         setSetting("close-on-game-exit", closeOnGameExit)
     }, [closeOnGameExit])
 
+    useEffect(() => {
+        setSetting("show-snapshots", showSnapshots)
+    }, [showSnapshots])
+    useEffect(() => {
+        setSetting("show-beta-and-alpha", showBetaAndAlpha)
+    }, [showBetaAndAlpha])
     useEffect(() => {
         setSetting("launch-args", launchArgs)
     }, [launchArgs])
@@ -208,11 +218,14 @@ function Settings(){
             <div className="container mt-3">
                 <h3>Advanced Settings</h3><hr />
 
+                <SettingsCheckbox name="Show Vanilla Snapshots Versions" value={showSnapshots} onChange={setShowSnapshots} />
+                <SettingsCheckbox name="Show Vanilla Beta and Alpha Versions" value={showBetaAndAlpha} onChange={setShowBetaAndAlpha} />
+
                 <table className="table table-borderless mt-3">
                     <tbody>
-                    <tr>
-                        <SettingsInput name="Java Launch Arguments" type="text" value={launchArgs} onChange={(v) => setLaunchArgs(v as string)} />
-                    </tr>
+                        <tr>
+                            <SettingsInput name="Java Launch Arguments" type="text" value={launchArgs} onChange={(v) => setLaunchArgs(v as string)} />
+                        </tr>
                     </tbody>
                 </table>
             </div>

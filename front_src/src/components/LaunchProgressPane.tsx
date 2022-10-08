@@ -1,7 +1,8 @@
 import React, {useEffect} from "react"
-import {LinearProgress} from "@mui/material";
+import {Backdrop, Box, Fade, LinearProgress, Modal, Typography} from "@mui/material";
 import {exposedFunctions} from "../utils/constants";
 import {McLcDownloadStatus, McLcProgress} from "../types/McLcResponses";
+import Logger from "../utils/logger";
 
 interface LaunchProgressPaneProps{
     setLaunching: (launching: boolean) => void
@@ -11,6 +12,8 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
     const [progress, setProgress] = React.useState<number>(0)
     const [buffer, setBuffer] = React.useState<number>(10)
     const [info, setInfo] = React.useState<string>("Starting up...")
+
+    const [error, setError] = React.useState<React.ReactNode | null>(null)
 
     function setState(val: boolean){
         props.setLaunching(val)
@@ -31,8 +34,19 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
             setInfo("Game launched!")
             setTimeout(() => setState(false), 2500)
         })
-        exposedFunctions("mc").on("gameLaunchError", () => setState(false))
-        exposedFunctions("mc").on("close", () => setState(false))
+        exposedFunctions("mc").on("gameLaunchError", () => {
+            setError(<>
+                Game launch error.<br />Please check the console for more information. (Ctrl + Shift + I)
+            </>)
+            setState(false)
+        })
+        exposedFunctions("mc").on("close", (exitCode: number) => {
+            setState(false)
+            if(exitCode === 0) return
+            setError(<>
+                Game exited with code {exitCode}. <br />Is your Java version compatible with this version? <br /><br /><br />Please check the console for more information. (Ctrl + Shift + I)
+            </>)
+        })
 
         exposedFunctions("mc").on("download-status", (e: McLcDownloadStatus) => {
             if(e.type === "native") return
@@ -53,16 +67,46 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
             }
         })
 
-        exposedFunctions("mc").on("arguments", console.info)
-        exposedFunctions("mc").on("debug", console.debug)
-        exposedFunctions("mc").on("data", console.log)
+        exposedFunctions("mc").on("arguments", Logger.info)
+        exposedFunctions("mc").on("debug", Logger.debug)
+        exposedFunctions("mc").on("data", Logger.log)
     }, [])
 
     return (
-        <div className="launch-progress-pane">
-            <LinearProgress variant={loadingState} value={progress} valueBuffer={buffer} />
-            <span className="info-text">{info}</span>
-        </div>
+        <>
+            <Modal
+                open={error !== null}
+                onClose={() => setError(null)}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    timeout: 500,
+                }}
+            >
+                <Fade in={error !== null}>
+                    <Box
+                        sx={{
+                            position: 'absolute' as 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 800,
+                            bgcolor: 'background.paper',
+                            border: '2px solid #000',
+                            boxShadow: 24,
+                            p: 4
+                        }}
+                    >
+                        <Typography id="transition-modal-title" variant="h6" component="h2">Launch Error</Typography>
+                        <Typography id="transition-modal-description" sx={{ mt: 2 }}>{error}</Typography>
+                    </Box>
+                </Fade>
+            </Modal>
+            <div className="launch-progress-pane">
+                <LinearProgress variant={loadingState} value={progress} valueBuffer={buffer} />
+                <span className="info-text">{info}</span>
+            </div>
+        </>
     )
 }
 

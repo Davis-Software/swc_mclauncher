@@ -4,7 +4,7 @@ import Pane from "../components/Pane";
 import {LaunchBarCustomContent, LaunchBarListContent} from "../components/LaunchBarComponents";
 import {Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {McLcVersionType, McVersionResponseType, McVersionType} from "../types/mcVersionType";
-import {getSetting} from "../utils/settings";
+import {getSetting, getSettingSync} from "../utils/settings";
 import {loadMCVersions} from "../utils/info-loader";
 import {compareVersions, validate} from "compare-versions";
 import {exposedFunctions} from "../utils/constants";
@@ -17,6 +17,11 @@ function MinecraftVanillaLaunchBar(){
 
     const [versionDropdownOpen, setVersionDropdownOpen] = React.useState<boolean>(false)
 
+    function findVersionType(version: string, mcVersionsCustom: McVersionType[] = mcVersions){
+        if (version === "") return null
+        return mcVersionsCustom.find((v: McVersionType) => v.id === version)?.type || null
+    }
+
     useEffect(() => {
         loadMCVersions().then(setMcVersionsData)
         getSetting("ram").then(setRamSetting)
@@ -25,8 +30,12 @@ function MinecraftVanillaLaunchBar(){
         if(!mcVersionsData) return
 
         let versions: McVersionType[] = []
+        let searchForVersions = ["release"]
 
-        for(let versionType of ["release", "snapshot", "old_beta", "old_alpha"]){
+        if(getSettingSync("show-snapshots")) searchForVersions.push("snapshot")
+        if(getSettingSync("show-beta-and-alpha")) searchForVersions.push("old_beta", "old_alpha")
+
+        for(let versionType of searchForVersions){
             let vs = mcVersionsData.versions.filter((version: McVersionType) => version.type === versionType)
             vs.sort((a: McVersionType, b: McVersionType) => {
                 return (validate(a.id) && validate(b.id)) ? compareVersions(b.id, a.id) : 0
@@ -34,7 +43,9 @@ function MinecraftVanillaLaunchBar(){
         }
 
         setMcVersions(versions)
-        setVersion(localStorage.getItem("vanillaMcVersion") || "")
+
+        let savedVersion = localStorage.getItem("vanillaMcVersion") || ""
+        setVersion(searchForVersions.includes(findVersionType(savedVersion, versions)!) ? savedVersion : "")
     }, [mcVersionsData])
     useEffect(() => {
         if(version === "") return
@@ -48,7 +59,7 @@ function MinecraftVanillaLaunchBar(){
     function handleButtonClick(){
         let versionInfo: McLcVersionType = {
             number: version,
-            type: mcVersions.find((v: McVersionType) => v.id === version)!.type
+            type: findVersionType(version)!
         }
         exposedFunctions("mc").launchVanilla(versionInfo)
     }

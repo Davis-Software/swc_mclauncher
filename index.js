@@ -3,7 +3,7 @@ const path = require("path");
 
 const config = require("./back/config")
 const settings = require("./back/settings")
-const {invoke, registerIpcListener} = require("./back/ipc-handler");
+const {invoke, registerIpcListener, registerIpcListenerSync} = require("./back/ipc-handler");
 
 require("./back/mc-connector")
 require("./back/utils")
@@ -125,6 +125,9 @@ registerIpcListener("settings:get", (event, key) => {
 })
 registerIpcListener("settings:set", (event, key, value) => {
     return settings.set(key, value)
+})
+registerIpcListenerSync("settings:getSync", (event, key) => {
+    return settings.get(key)
 })
 registerIpcListener("settings:getBulk", (event, keys) => {
     let settingsObj = {}

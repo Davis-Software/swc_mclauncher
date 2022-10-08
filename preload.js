@@ -58,6 +58,9 @@ contextBridge.exposeInMainWorld("settings", {
     set: (key, value) => {
         ipcRenderer.invoke("settings:set", key, value)
     },
+    getSync: (key) => {
+        return ipcRenderer.sendSync("settings:getSync", key)
+    },
     getBulk: async (keys) => {
         return await ipcRenderer.invoke("settings:getBulk", keys)
     }
