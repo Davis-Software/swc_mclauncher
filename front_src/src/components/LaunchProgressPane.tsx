@@ -1,5 +1,5 @@
 import React, {useEffect} from "react"
-import {Backdrop, Box, Fade, LinearProgress, Modal, Typography} from "@mui/material";
+import {Box, Fade, LinearProgress, Modal, Typography} from "@mui/material";
 import {exposedFunctions} from "../utils/constants";
 import {McLcDownloadStatus, McLcProgress} from "../types/McLcResponses";
 import Logger from "../utils/logger";
@@ -14,6 +14,7 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
     const [info, setInfo] = React.useState<string>("Starting up...")
 
     const [error, setError] = React.useState<React.ReactNode | null>(null)
+    const [showError, setShowError] = React.useState<boolean>(false)
 
     function setState(val: boolean){
         props.setLaunching(val)
@@ -38,6 +39,7 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
             setError(<>
                 Game launch error.<br />Please check the console for more information. (Ctrl + Shift + I)
             </>)
+            setShowError(true)
             setState(false)
         })
         exposedFunctions("mc").on("close", (exitCode: number) => {
@@ -46,6 +48,7 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
             setError(<>
                 Game exited with code {exitCode}. <br />Is your Java version compatible with this version? <br /><br /><br />Please check the console for more information. (Ctrl + Shift + I)
             </>)
+            setShowError(true)
         })
 
         exposedFunctions("mc").on("download-status", (e: McLcDownloadStatus) => {
@@ -75,15 +78,16 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
     return (
         <>
             <Modal
-                open={error !== null}
-                onClose={() => setError(null)}
+                open={showError}
+                onClose={() => setShowError(false)}
                 closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
+                componentsProps={{
+                    // ignoring since it's a bug in the typings
+                    // @ts-ignore
+                    backdrop: {timeout: 500}
                 }}
             >
-                <Fade in={error !== null}>
+                <Fade in={showError}>
                     <Box
                         sx={{
                             position: 'absolute' as 'absolute',
