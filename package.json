@@ -39,6 +39,17 @@
     "build": {
         "appId": "org.software-city.projects.swc_mclauncher",
         "afterPack": "./afterPackHook.js",
+        "files": [
+            "!.github/**/*",
+            "!dist/**/*",
+            "!front_src/**/*",
+            "!.gitignore",
+            "!afterPackHook.js",
+            "!dev-app-update.yml",
+            "!electron-builder.env",
+            "!package-lock.json",
+            "!tsconfig.json"
+        ],
         "extraFiles": [],
         "linux": {
             "target": "deb",
