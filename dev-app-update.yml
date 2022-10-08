@@ -1,0 +1,5 @@
+owner: Davis-Software
+repo: swc_mclauncher
+provider: github
+publishAutoUpdate: true
+updaterCacheDirName: swc_mclauncher

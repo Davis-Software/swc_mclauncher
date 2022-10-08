@@ -32,6 +32,7 @@ function MainWindow () {
     if(fullscreen) win.maximize()
 
     win.identifier = "main-window"
+    require("./back/update-service")
     win.forceClose = () => {
         win.allowClose = true
         win.close()
@@ -99,12 +100,37 @@ function MainWindow () {
 
     attachWindowQOLSaves()
 }
-app.whenReady().then(MainWindow)
+app.whenReady().then(() => {
+    if(!app.requestSingleInstanceLock()) return
+    MainWindow()
+})
 app.on('activate', () => {
+    console.log(BrowserWindow.getAllWindows())
     if (BrowserWindow.getAllWindows().length === 0) {
         MainWindow()
     }
 })
+
+// Single Instance lock
+function openedByUrl(url) {
+    if(url) win.webContents.send('openedByUrl', url)
+}
+if (app.requestSingleInstanceLock()) {
+    app.on('second-instance', (e, argv) => {
+        if (config.platform === 'win32') {
+            openedByUrl(argv.find((arg) => arg.startsWith('swc_mclauncher:')))
+        }
+        if (win) {
+            if (win.isMinimized()) win.restore()
+            win.show()
+            win.focus()
+        }
+    })
+}
+
+if (!app.isDefaultProtocolClient('swc_mclauncher')) {
+    app.setAsDefaultProtocolClient('swc_mclauncher')
+}
 
 
 function attachWindowQOLSaves(){

@@ -1,30 +1,79 @@
 {
     "productName": "SWC Minecraft Launcher",
-    "homepage": "https://projects.software-city.org/",
+    "homepage": "https://software-city.org/",
     "bugs": {
+        "url": "https://github.com/Davis-Software/swc_mclauncher/issues",
         "email": "support@software-city.org"
     },
     "author": {
         "name": "Davis_Software",
         "email": "support@software-city.org"
     },
-    "name": "swc-mclauncher",
-    "version": "0.1.0",
+    "name": "swc_mclauncher",
+    "version": "1.1.0",
     "description": "A Minecraft Launcher for Software City",
+    "repository": "https://github.com/Davis-Software/swc_mclauncher",
     "license": "MIT",
     "main": "index.js",
     "scripts": {
         "start": "electron .",
         "pack": "electron-builder --dir",
-        "dist": "electron-builder --x64 --win"
+        "dist": "electron-builder --x64 --win",
+        "distlinux": "electron-builder --x64 --linux",
+        "distmacOS": "electron-builder --x64 --mac",
+        "publish": "electron-builder --x64 --win -p always",
+        "publishlinux": "electron-builder --x64 --linux -p always",
+        "publishmacOS": "electron-builder --x64 --mac -p always"
     },
     "devDependencies": {
         "electron": "^21.1.0",
-        "electron-builder": "^23.3.3"
+        "electron-builder": "^23.6.0",
+        "js-yaml": "^4.1.0"
     },
     "dependencies": {
         "markdown-it": "^13.0.1",
         "minecraft-launcher-core": "^3.16.16",
-        "msmc": "^4.0.0-pre7"
+        "msmc": "^4.0.0-pre7",
+        "electron-updater": "^5.3.0"
+    },
+    "build": {
+        "appId": "org.software-city.projects.swc_mclauncher",
+        "afterPack": "./afterPackHook.js",
+        "extraFiles": [],
+        "linux": {
+            "target": "deb",
+            "icon": "./static/logo/512x512.png",
+            "category": "Game",
+            "publish": {
+                "provider": "github",
+                "publishAutoUpdate": true,
+                "releaseType": "release"
+            }
+        },
+        "win": {
+            "target": "nsis",
+            "icon": ".\\static\\logo\\512x512.ico",
+            "publish": {
+                "provider": "github",
+                "publishAutoUpdate": true,
+                "releaseType": "release"
+            }
+        },
+        "mac": {
+            "target": "dmg",
+            "icon": "./static/logo/512x512.icns",
+            "darkModeSupport": true,
+            "publish": {
+                "provider": "github",
+                "publishAutoUpdate": true,
+                "releaseType": "release"
+            }
+        },
+        "protocols": {
+            "name": "SWC Minecraft Launcher",
+            "schemes": [
+                "swc_mclauncher"
+            ]
+        }
     }
 }
