@@ -96,8 +96,14 @@ function launchModded(manifest) {
     invoke("mc:initGame")
 
     if(installNeeded){
+        let del = [
+            "bin",
+            "config",
+            "mods"
+        ]
+
         invoke("mc:packageMode")
-        fs.readdirSync(rootPath).filter(n => n !== "manifest.json").forEach(file => {
+        fs.readdirSync(rootPath).filter(n => del.includes(n)).forEach(file => {
             fsx.removeSync(path.join(rootPath, file))
         })
         invoke("mc:packageInstall")
