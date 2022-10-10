@@ -22,6 +22,7 @@ function update_downloaded(){
         message: "Update ready!\nDo you want to restart and update?"
     })
     if(resp === 0){
+        getMainWindow().allowClose = true
         autoUpdater.quitAndInstall()
     }else{
         autoUpdater.autoInstallOnAppQuit = true
