@@ -114,7 +114,9 @@ function launchModded(manifest) {
 
     const opts = {
         clientPackage: installNeeded ? mcPackage : null,
-        forge: path.join(rootPath, "bin", `forge-${manifest.mcVersion}.jar`),
+        forge: manifest.binary ?
+            path.join(rootPath, ...manifest.binary.split("/")) :
+            path.join(rootPath, "bin", `forge-${manifest.mcVersion}.jar`),
 
         authorization: settings.get("credentials"),
         root: rootPath,
