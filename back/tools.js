@@ -103,10 +103,16 @@ registerIpcListener("render-markdown-file", (e, file) => {
     }
 
     try {
-        let data = fs.readFileSync(
-            path.join(__dirname, "../templates/components", file),
-            "utf8"
-        )
+        let data = file !== "README.md" ?
+            fs.readFileSync(
+                path.join(__dirname, "../templates/components", file),
+                "utf8"
+            ) :
+            fs.readFileSync(
+                path.join(__dirname, "../README.md"),
+                "utf8"
+            )
+
         let md = MarkdownIt({html: true, linkify: true}).render(data)
         builtMarkdown[file] = md
         return md
