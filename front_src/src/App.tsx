@@ -10,6 +10,7 @@ import {UserInterface} from "./types/userInterface";
 import LaunchBarPane from "./components/LaunchBarPane";
 import LaunchProgressPane from "./components/LaunchProgressPane";
 import UpdateInfo from "./components/UpdateInfo";
+import GameInfo from "./components/GameInfo";
 
 
 function App(){
@@ -44,12 +45,15 @@ function App(){
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            {userData && <UserDropdown
-                user={userData}
-                pageChange={setPage}
-                userDataChange={setUserData}
-                disabled={actionsDisabled}
-            />}
+            {userData && <>
+                <UserDropdown
+                    user={userData}
+                    pageChange={setPage}
+                    userDataChange={setUserData}
+                    disabled={actionsDisabled}
+                />
+                <GameInfo />
+            </>}
             {userData === null ? (
                 <Login pageChange={setPage} userDataChange={setUserData} />
             ) : (

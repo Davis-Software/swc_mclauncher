@@ -54,6 +54,26 @@ function onObjectChange(object, onChange) {
     }
     return new Proxy(object, handler)
 }
+function onArrayChange(array, onChange){
+    return {
+        push(...args){
+            let out = array.push(...args)
+            onChange()
+            return out
+        },
+        splice(...args){
+            let out = array.splice(...args)
+            onChange()
+            return out
+        },
+        indexOf(...args){
+            return array.indexOf(...args)
+        },
+        get length(){
+            return array.length
+        }
+    }
+}
 
 function tryOrElse(fn, elseFn) {
     try {
@@ -130,4 +150,4 @@ registerIpcListener("open-explorer", (e, file) => {
     }
 })
 
-module.exports = {EventEmitter, isObject, onObjectChange, walkDir, sleep}
+module.exports = {EventEmitter, isObject, onObjectChange, onArrayChange, walkDir, sleep}

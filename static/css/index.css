@@ -29,11 +29,14 @@ body{
     z-index: 2048;
     border-bottom: 1px solid #444;
 }
-#window-frame #user-dropdown{
+#window-frame #frame-inserts{
     position: absolute;
     top: 0;
     left: 300px;
     height: 36px;
+    display: flex;
+}
+#window-frame #user-dropdown{
     transition: all .15s;
     -webkit-app-region: no-drag;
 }

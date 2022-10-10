@@ -6,9 +6,12 @@ const path = require("path");
 const fs = require("fs");
 const {compare} = require("compare-versions");
 const fsx = require("fs-extra");
+const {onArrayChange} = require("./tools");
 
 
-const runningClients = []
+const runningClients = onArrayChange([], () => {
+    invoke("mc:runningClients", runningClients.length)
+})
 
 
 function askLogin() {
