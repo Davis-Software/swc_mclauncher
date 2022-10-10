@@ -17,7 +17,7 @@ function UpdateInfo(){
     useEffect(() => {
         if(!releaseNotesRef.current) return
         releaseNotesRef.current.innerHTML = updateInfo?.releaseNotes || ""
-    }, [updateInfo, releaseNotesRef])
+    }, [updateInfo, releaseNotesRef.current])
 
     return (
         <Modal
