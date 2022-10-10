@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld("utils", {
     hashing: {
         sha512: (string) => crypto.createHash("sha512").update(string).digest("hex")
     },
+    renderMarkdownFile: (file) => ipcRenderer.invoke("render-markdown-file", file),
     getRAMAmount: () => ipcRenderer.invoke("get-ram-amount"),
 })
 contextBridge.exposeInMainWorld("ipc", {
