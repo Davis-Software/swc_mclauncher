@@ -1,4 +1,4 @@
-const { BrowserWindow } = require("electron")
+const { BrowserWindow, dialog } = require("electron")
 
 
 function getMainWindow(){
@@ -12,6 +12,12 @@ function getMainWindow(){
 }
 
 
+function errorWindow(title, message){
+    dialog.showErrorBox(title, message)
+}
+
+
 module.exports = {
-    getMainWindow
+    getMainWindow,
+    errorWindow
 }
