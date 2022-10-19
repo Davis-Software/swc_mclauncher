@@ -7,11 +7,26 @@ const fs = require("fs");
 const {compare} = require("compare-versions");
 const fsx = require("fs-extra");
 const {onArrayChange} = require("./tools");
+const {getMainWindow} = require("./electron-tools");
 
 
 const runningClients = onArrayChange([], () => {
     invoke("mc:runningClients", runningClients.length)
 })
+
+
+function afterLaunchCalls(){
+    if(settings.get("minimize-while-playing")){
+        getMainWindow().hide()
+    }
+}
+function afterCloseCalls(){
+    if(settings.get("close-on-game-exit")){
+        getMainWindow().forceClose()
+    } else if(settings.get("minimize-while-playing")){
+        getMainWindow().show()
+    }
+}
 
 
 function askLogin() {
@@ -58,6 +73,7 @@ function launchVanilla(version) {
 
     launcher.launch(opts).then(() => {
         invoke("mc:gameLaunched")
+        afterLaunchCalls()
     }).catch((e) => {
         runningClients.splice(runningClients.indexOf(launcher), 1)
         invoke("mc:gameLaunchError", e)
@@ -68,6 +84,7 @@ function launchVanilla(version) {
     launcher.on('close', (e) => {
         runningClients.splice(runningClients.indexOf(launcher), 1)
         invoke("mc:close", e)
+        afterCloseCalls()
     })
     launcher.on('download', (e) => invoke("mc:download", e))
     launcher.on('download-status', (e) => invoke("mc:download-status", e))
@@ -145,6 +162,7 @@ function launchModded(manifest) {
     launcher.launch(opts).then(() => {
         if(installNeeded) fs.writeFileSync(path.join(rootPath, "manifest.json"), JSON.stringify(manifest))
         invoke("mc:gameLaunched")
+        afterLaunchCalls()
     }).catch((e) => {
         runningClients.splice(runningClients.indexOf(launcher), 1)
         invoke("mc:gameLaunchError", e)
@@ -155,6 +173,7 @@ function launchModded(manifest) {
     launcher.on('close', (e) => {
         runningClients.splice(runningClients.indexOf(launcher), 1)
         invoke("mc:close", e)
+        afterCloseCalls()
     })
     launcher.on('package-extract', () => invoke("mc:package-extract"))
     launcher.on('download', (e) => invoke("mc:download", e))

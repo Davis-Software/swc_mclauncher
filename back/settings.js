@@ -35,7 +35,7 @@ class Settings {
         fs.writeFileSync(path.join(appDataDir, "settings.json"), JSON.stringify(this.settings, null, 4))
     }
     get(key){
-        return this.settings[key]
+        return this.settings[key] || null
     }
     set(key, value){
         this.settings[key] = value
