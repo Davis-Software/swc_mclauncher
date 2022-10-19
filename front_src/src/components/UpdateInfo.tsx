@@ -4,7 +4,7 @@ import {UpdateInfoType} from "../types/UpdateInfoType";
 import {exposedFunctions} from "../utils/constants";
 
 function UpdateInfo(){
-    const [open, setOpen] = React.useState(true)
+    const [open, setOpen] = React.useState(false)
     const [updateInfo, setUpdateInfo] = React.useState<UpdateInfoType | null>(null)
     const releaseNotesRef = React.useRef<HTMLDivElement>(null)
 
