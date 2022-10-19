@@ -36,7 +36,8 @@
         "msmc": "^4.0.0-pre7",
         "electron-updater": "^5.3.0",
         "compare-versions": "^5.0.1",
-        "fs-extra": "^10.1.0"
+        "fs-extra": "^10.1.0",
+        "open": "^8.4.0"
     },
     "build": {
         "appId": "org.software-city.projects.swc_mclauncher",
