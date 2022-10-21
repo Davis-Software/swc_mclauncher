@@ -1,7 +1,7 @@
 const os = require("os");
 const {registerIpcListener} = require("./ipc-handler");
 const {platform} = require("./config");
-const child_process = require("child_process");
+const childProcess = require("child_process");
 
 
 registerIpcListener("get-ram-amount", () => {
@@ -9,19 +9,28 @@ registerIpcListener("get-ram-amount", () => {
 })
 
 
-function findJava() {
+function findJavaPaths() {
     try{
+        let paths
+
         if(platform === "win32"){
-            return  child_process.execSync("where java.exe").toString().split("\r\n")[0]
+            paths = childProcess.execSync("where java.exe").toString().trim().split("\r\n")
         }else{
-            return child_process.execSync("which java").toString().split("\n")[0]
+            paths = childProcess.execSync("which java").toString().trim().split("\n")
         }
+
+        paths = paths.map(path => ({
+            path,
+            version: childProcess.execSync(`"${path}" -version 2>&1`).toString().trim().split('"')[1]
+        }))
+
+        return paths
     } catch(e){
-        return null
+        return []
     }
 }
 
 
 module.exports = {
-    findJava
+    findJavaPaths
 }

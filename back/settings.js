@@ -1,11 +1,11 @@
 const fs = require("fs")
 const path = require("path")
 const {appDataDir} = require("./config")
-const {findJava} = require("./utils");
+const {findJavaPaths} = require("./utils");
 const {errorWindow} = require("./electron-tools");
 
-const javaPath = findJava()
-if(javaPath === null){
+const javaPaths = findJavaPaths()
+if(javaPaths.length < 1){
     errorWindow(
         "Java not found",
         "No Java installation was found on your system.\n" +
@@ -22,12 +22,13 @@ class Settings {
             credentials: null,
             ram: 1024,
             mcPath: path.join(appDataDir, "..", ".minecraft_swc"),
-            javaPath: javaPath,
+            javaPath: javaPaths[0].path,
             "splash-width": "1280",
             "splash-height": "720",
             "launch-args": ""
         }
         this.load()
+        this.set("javaPaths", javaPaths)
     }
     load(){
         if(!fs.existsSync(appDataDir)){

@@ -1,12 +1,12 @@
 import React, {useEffect} from "react";
 import PageBase from "./PageBase";
-import {Checkbox, FormControlLabel, Slider, TextField} from "@mui/material";
+import {Checkbox, FormControlLabel, MenuItem, Slider, TextField} from "@mui/material";
 import {exposedFunctions} from "../utils/constants";
 import {getSetting, getSettingBoolean, setSetting} from "../utils/settings";
 
 interface SettingsInputProps {
     name: string
-    type: "text" | "number" | "path" | "file"
+    type: "text" | "number" | "path" | "file" | "dropdown-file"
     value: string | number
     onChange: (value: string | number | null) => void
 }
@@ -14,33 +14,44 @@ function SettingsInput(props: SettingsInputProps){
     const id = `settings-input-${props.name.replace(/ /, "_").toLowerCase()}`
 
     function pathDialog(){
-        exposedFunctions("dialog").showDialog({
-            properties: ["openDirectory", "createDirectory", "dontAddToRecent"],
-            defaultPath: props.value as string
-        }).then((data: {canceled: boolean, filePaths: string[]}) => {
-            if(data.canceled) return
-            props.onChange(data.filePaths[0])
+        return new Promise((resolve) => {
+            exposedFunctions("dialog").showDialog({
+                properties: ["openDirectory", "createDirectory", "dontAddToRecent"],
+                defaultPath: props.value as string
+            }).then((data: {canceled: boolean, filePaths: string[]}) => {
+                if(data.canceled) {
+                    resolve(null)
+                }else{
+                    props.onChange(data.filePaths[0])
+                    resolve(data.filePaths[0])
+                }
+            })
         })
     }
 
     function fileDialog(){
-        exposedFunctions("dialog").showDialog({
-            properties: ["openFile", "createDirectory", "dontAddToRecent"],
-            defaultPath: props.value as string,
-            patterns: [
-                {name: "All Files", extensions: ["*"]}
-            ]
-        }).then((data: {canceled: boolean, filePaths: string[]}) => {
-            if(data.canceled) return
-            props.onChange(data.filePaths[0])
+        return new Promise((resolve) => {
+            exposedFunctions("dialog").showDialog({
+                properties: ["openFile", "createDirectory", "dontAddToRecent"],
+                defaultPath: props.value as string,
+                patterns: [
+                    {name: "All Files", extensions: ["*"]}
+                ]
+            }).then((data: {canceled: boolean, filePaths: string[]}) => {
+                if(data.canceled){
+                    resolve(null)
+                }else{
+                    props.onChange(data.filePaths[0])
+                    resolve(data.filePaths[0])
+                }
+            })
         })
     }
 
-    return (
-        <>
-            <td className="pt-3">{props.name}</td>
-            <td className="flex-grow-1">
-                {props.type === "path" ? (
+    function types(){
+        switch(props.type){
+            case "path":
+                return (
                     <TextField
                         sx={{width: "100%"}}
                         variant="standard"
@@ -50,7 +61,46 @@ function SettingsInput(props: SettingsInputProps){
                         onChange={(e) => props.onChange(e.target.value)}
                         onClick={pathDialog}
                     />
-                ) : props.type === "file" ? (
+                )
+            case "dropdown-file":
+                const [javaPaths, setJavaPaths] = React.useState<{path: string, version: string}[]>([])
+                const [javaPathsItems, setJavaPathsItems] = React.useState<React.ReactNode[]>([])
+
+                function handleClick(e: React.MouseEvent<HTMLLIElement>){
+                    e.preventDefault()
+                    fileDialog().then((path) => {
+                        if(path === null){
+                            props.onChange(javaPaths[0].path)
+                        }
+                    })
+                }
+
+                useEffect(() => {
+                    getSetting("javaPaths").then(setJavaPaths)
+                }, [])
+                useEffect(() => {
+                    let paths = javaPaths.map((path, index) => (
+                        <MenuItem key={index} value={path.path}>{path.version} {path.path.includes("jdk") ? "(JDK)" : <></>}</MenuItem>
+                    ))
+                    paths.push(<MenuItem key={paths.length} value="custom" onClick={handleClick}>Custom (Buggy)</MenuItem>)
+                    setJavaPathsItems(paths)
+                }, [javaPaths])
+
+                return (
+                    <TextField
+                        sx={{width: "100%"}}
+                        variant="standard"
+                        aria-labelledby={id}
+                        type="text"
+                        value={props.value}
+                        onChange={(e) => props.onChange(e.target.value)}
+                        select
+                    >
+                        {javaPathsItems}
+                    </TextField>
+                )
+            case "file":
+                return (
                     <TextField
                         sx={{width: "100%"}}
                         variant="standard"
@@ -60,7 +110,9 @@ function SettingsInput(props: SettingsInputProps){
                         onChange={(e) => props.onChange(e.target.value)}
                         onClick={fileDialog}
                     />
-                ) : (
+                )
+            default:
+                return (
                     <TextField
                         sx={{width: "100%"}}
                         variant="standard"
@@ -69,7 +121,15 @@ function SettingsInput(props: SettingsInputProps){
                         value={props.value}
                         onChange={(e) => props.onChange(e.target.value)}
                     />
-                )}
+                )
+        }
+    }
+
+    return (
+        <>
+            <td className="pt-3">{props.name}</td>
+            <td className="flex-grow-1">
+                {types()}
             </td>
         </>
     )
@@ -206,7 +266,7 @@ function Settings(){
                     <tbody>
                         <tr>
                             <SettingsInput name="Minecraft Path" type="path" value={mcPath!} onChange={(v) => setMcPath(v as string)} />
-                            <SettingsInput name="Java Path" type="file" value={javaPath!} onChange={(v) => setJavaPath(v as string)} />
+                            <SettingsInput name="Java Installation" type="dropdown-file" value={javaPath!} onChange={(v) => setJavaPath(v as string)} />
                         </tr>
                         <tr>
                             <SettingsInput name="SplashScreen Width" type="number" value={width} onChange={(v) => setWidth(v as number)} />
