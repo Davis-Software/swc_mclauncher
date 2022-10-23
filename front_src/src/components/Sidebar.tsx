@@ -37,11 +37,10 @@ function Sidebar(props: SidebarProps) {
                 <img src={general.applicationIcon} height={32} width={32} alt="" />
                 <h6 style={{marginTop: ".7rem", marginLeft: "15px"}}>{general.applicationName}</h6>
             </Toolbar>
-            <List>
+            <List className="host-candle">
                 {Object.keys(pageMapping).filter(i => !pageMapping[i].hide).map((key, index) => (
                     <ListItemButton
                         disabled={props.disableSidebar}
-                        className="attach-candle"
                         sx={{
                             paddingLeft: props.page === key ? "30px" : "16px",
                             borderLeft: props.page === key ? "4px solid #3f51b5" : "none",
@@ -60,7 +59,6 @@ function Sidebar(props: SidebarProps) {
                 {props.modPacks && Object.keys(props.modPacks).map((key, index) => (
                     <ListItemButton
                         disabled={props.disableSidebar}
-                        className="attach-candle"
                         sx={{
                             paddingLeft: props.page === key ? "30px" : "16px",
                             borderLeft: props.page === key ? "4px solid #3f51b5" : "none",

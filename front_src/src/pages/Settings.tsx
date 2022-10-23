@@ -9,6 +9,7 @@ interface SettingsInputProps {
     type: "text" | "number" | "path" | "file" | "dropdown-file"
     value: string | number
     onChange: (value: string | number | null) => void
+    debugMode?: boolean
 }
 function SettingsInput(props: SettingsInputProps){
     const id = `settings-input-${props.name.replace(/ /, "_").toLowerCase()}`
@@ -63,7 +64,7 @@ function SettingsInput(props: SettingsInputProps){
                     />
                 )
             case "dropdown-file":
-                const [javaPaths, setJavaPaths] = React.useState<{path: string, version: string}[]>([])
+                const [javaPaths, setJavaPaths] = React.useState<{path: string, version: string, jdk: boolean}[]>([])
                 const [javaPathsItems, setJavaPathsItems] = React.useState<React.ReactNode[]>([])
 
                 function handleClick(e: React.MouseEvent<HTMLLIElement>){
@@ -80,11 +81,21 @@ function SettingsInput(props: SettingsInputProps){
                 }, [])
                 useEffect(() => {
                     let paths = javaPaths.map((path, index) => (
-                        <MenuItem key={index} value={path.path}>{path.version} {path.path.includes("jdk") ? "(JDK)" : <></>}</MenuItem>
+                        <MenuItem key={index} value={path.path}>
+                            {path.version}
+                            <span
+                                className={path.jdk? "text-warning": "text-success"}
+                                style={{position: "absolute", right: "25px"}}
+                            >
+                                {path.jdk ? "JDK" : "JRE"}
+                            </span>
+                        </MenuItem>
                     ))
-                    paths.push(<MenuItem key={paths.length} value="custom" onClick={handleClick}>Custom (Buggy)</MenuItem>)
+                    if(props.debugMode){
+                        paths.push(<MenuItem key={paths.length} value="custom" onClick={handleClick}>Custom (Buggy)</MenuItem>)
+                    }
                     setJavaPathsItems(paths)
-                }, [javaPaths])
+                }, [javaPaths, props.debugMode])
 
                 return (
                     <TextField
@@ -92,7 +103,7 @@ function SettingsInput(props: SettingsInputProps){
                         variant="standard"
                         aria-labelledby={id}
                         type="text"
-                        value={props.value}
+                        value={javaPathsItems && javaPathsItems.length > 0 ? props.value : ""}
                         onChange={(e) => props.onChange(e.target.value)}
                         select
                     >
@@ -266,7 +277,7 @@ function Settings(){
                     <tbody>
                         <tr>
                             <SettingsInput name="Minecraft Path" type="path" value={mcPath!} onChange={(v) => setMcPath(v as string)} />
-                            <SettingsInput name="Java Installation" type="dropdown-file" value={javaPath!} onChange={(v) => setJavaPath(v as string)} />
+                            <SettingsInput name="Java Installation" type="dropdown-file" debugMode={debugLogging} value={javaPath!} onChange={(v) => setJavaPath(v as string)} />
                         </tr>
                         <tr>
                             <SettingsInput name="SplashScreen Width" type="number" value={width} onChange={(v) => setWidth(v as number)} />
@@ -290,12 +301,12 @@ function Settings(){
                 <table className="table table-borderless mt-3 mb-3">
                     <tbody>
                         <tr>
-                            <SettingsInput name="Java Launch Arguments" type="text" value={launchArgs} onChange={(v) => setLaunchArgs(v as string)} />
+                            <SettingsInput name="Java Launch Arguments" type="text" value={launchArgs ? launchArgs : ""} onChange={(v) => setLaunchArgs(v as string)} />
                         </tr>
                     </tbody>
                 </table>
 
-                <SettingsCheckbox name="Debug logging" value={debugLogging} onChange={setDebugLogging} />
+                <SettingsCheckbox name="Debug Mode" value={debugLogging} onChange={setDebugLogging} />
             </div>
         </PageBase>
     )

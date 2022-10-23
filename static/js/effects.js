@@ -72,6 +72,17 @@
     }
 
 
+    function hostCandleOnChildren(elem, size=1){
+        elem.classList.add("candle-host")
+
+        elem.childNodes.forEach(child => {
+            if(child.nodeType === 1) {
+                attachCandle(child, size)
+            }
+        })
+    }
+
+
     function addListeners(list, callback, className){
         list = Array.from(list).map(selector => selector + `:not(.${className})`)
         if(list.join(", ") === "") return
@@ -94,14 +105,23 @@
             ".attach-candle"
         ], attachCandle, "candle-attached")
     }
+    function addCandleHosts(){
+        addListeners([
+            ".host-candle"
+        ], hostCandleOnChildren, "candle-host")
+    }
 
     addRipples()
     addCandles()
+    addCandleHosts()
     setInterval(addRipples, 1000)
     setInterval(addCandles, 1000)
+    setInterval(addCandleHosts, 1000)
     document.addEventListener("click", addListeners)
     document.addEventListener("click", addCandles)
+    document.addEventListener("click", addCandleHosts)
 
     namespaces.createRipple = createRipple
     namespaces.attachCandle = attachCandle
+    namespaces.hostCandleOnChildren = hostCandleOnChildren
 })()
