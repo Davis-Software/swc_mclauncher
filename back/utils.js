@@ -1,11 +1,12 @@
 const os = require("os");
-const {registerIpcListener} = require("./ipc-handler");
+const {registerIpcListener, registerIpcListenerSync} = require("./ipc-handler");
 const {platform} = require("./config");
 const childProcess = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
 
+registerIpcListenerSync("log", console.log)
 registerIpcListener("get-ram-amount", () => {
     return Math.round(os.totalmem() / 1024 / 1024);
 })

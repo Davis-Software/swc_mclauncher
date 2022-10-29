@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require("electron")
 
 
 contextBridge.exposeInMainWorld("utils", {
+    log: (message) => ipcRenderer.send("log", message),
     hashing: {
         sha512: (string) => crypto.createHash("sha512").update(string).digest("hex")
     },
@@ -42,6 +43,15 @@ contextBridge.exposeInMainWorld("dialog", {
     },
     askLogin: () => {
         return ipcRenderer.invoke("dialog:askLogin")
+    },
+    askValidate: () => {
+        return ipcRenderer.invoke("dialog:askValidate")
+    },
+    refreshLogin: () => {
+        return ipcRenderer.invoke("dialog:refreshLogin")
+    },
+    logout: () => {
+        return ipcRenderer.invoke("dialog:logout")
     }
 })
 contextBridge.exposeInMainWorld("mc", {

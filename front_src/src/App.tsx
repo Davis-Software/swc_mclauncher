@@ -11,6 +11,7 @@ import LaunchBarPane from "./components/LaunchBarPane";
 import LaunchProgressPane from "./components/LaunchProgressPane";
 import UpdateInfo from "./components/UpdateInfo";
 import GameInfo from "./components/GameInfo";
+import {exposedFunctions} from "./utils/constants";
 
 
 function App(){
@@ -28,6 +29,9 @@ function App(){
 
         loadModPacks().then(setModPacks)
         getSetting("credentials").then(setUserData)
+        exposedFunctions("dialog").askValidate().then((bool: boolean) => {
+            if(!bool) exposedFunctions("dialog").refreshLogin().then(setUserData)
+        })
     }, [])
 
     useEffect(() => {

@@ -13,6 +13,7 @@ const {getMainWindow} = require("./electron-tools");
 const runningClients = onArrayChange([], () => {
     invoke("mc:runningClients", runningClients.length)
 })
+let mcInstance = null
 
 
 function afterLaunchCalls(){
@@ -33,13 +34,50 @@ function askLogin() {
     const msMc = new auth('select_account')
 
     return new Promise((resolve) => {
-        msMc.on('load', console.log).launch('electron').then(async e => {
+        msMc.launch('electron').then(async e => {
             const mc = await e.getMinecraft()
             let credentials = mc.mclc()
 
             settings.set("credentials", credentials)
+            settings.set("refresh-token", e.msToken)
+
+            mcInstance = e
             resolve(credentials)
-        }).catch(() => {resolve(null)})
+        }).catch(() => {
+            mcInstance = null
+            resolve(null)
+        })
+    })
+}
+function askValidate(){
+    if(!mcInstance) return false
+
+    return mcInstance.validate()
+}
+function refreshLogin(forceReLogin = false){
+    if(!settings.get("refresh-token")) return null
+
+    const msMc = new auth("none")
+    return new Promise((resolve) => {
+        msMc.refresh(settings.get("refresh-token")).then(async e => {
+            const mc = await e.getMinecraft()
+            let credentials = mc.mclc()
+
+            if(credentials.access_token !== settings.get("credentials").access_token){
+                settings.set("credentials", credentials)
+                settings.set("refresh-token", e.msToken)
+            }
+
+            mcInstance = e
+            resolve(credentials)
+        }).catch(() => {
+            mcInstance = null
+            if(forceReLogin){
+                askLogin().then(resolve)
+            }else{
+                resolve(null)
+            }
+        })
     })
 }
 function logout(){
@@ -47,6 +85,14 @@ function logout(){
 }
 
 function launchVanilla(version) {
+    invoke("mc:initGame")
+
+    if(!askValidate()){
+        refreshLogin(true).then(() => launchVanilla(version))
+        invoke("mc:close", 0)
+        return
+    }
+
     const launcher = new Client()
     runningClients.push(launcher)
 
@@ -68,8 +114,6 @@ function launchVanilla(version) {
             detached: false
         }
     }
-
-    invoke("mc:initGame")
 
     launcher.launch(opts).then(() => {
         invoke("mc:gameLaunched")
@@ -93,6 +137,14 @@ function launchVanilla(version) {
 }
 
 function launchModded(manifest) {
+    invoke("mc:initGame")
+
+    if(!askValidate()){
+        refreshLogin(true).then(() => launchModded(manifest))
+        invoke("mc:close", 0)
+        return
+    }
+
     const rootPath = path.join(settings.get("mcPath"), "mod-packs", manifest.id)
 
     let currentManifest
@@ -112,8 +164,6 @@ function launchModded(manifest) {
     if(compare(manifest.version, currentManifest.version, ">")){
         installNeeded = true
     }
-
-    invoke("mc:initGame")
 
     if(installNeeded){
         let del = [
@@ -183,10 +233,15 @@ function launchModded(manifest) {
 }
 
 registerIpcListener("dialog:askLogin", askLogin)
+registerIpcListener("dialog:askValidate", askValidate)
+registerIpcListener("dialog:refreshLogin", refreshLogin)
 registerIpcListener("dialog:logout", logout)
 registerIpcListener("mc:launchVanilla", (e, v) => launchVanilla(v))
 registerIpcListener("mc:launchModded", (e, v) => launchModded(v))
 
 module.exports = {
-    askLogin
+    askLogin,
+    askValidate,
+    refreshLogin,
+    logout
 }
