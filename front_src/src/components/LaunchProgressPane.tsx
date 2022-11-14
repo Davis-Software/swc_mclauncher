@@ -1,5 +1,5 @@
 import React, {useEffect} from "react"
-import {Box, Fade, LinearProgress, Modal, Typography} from "@mui/material";
+import {Box, Button, Collapse, Fade, LinearProgress, Modal, Typography} from "@mui/material";
 import {exposedFunctions} from "../utils/constants";
 import {McLcDownloadStatus, McLcProgress} from "../types/McLcResponses";
 import Logger from "../utils/logger";
@@ -14,7 +14,9 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
     const [info, setInfo] = React.useState<string>("Starting up...")
 
     const [error, setError] = React.useState<React.ReactNode | null>(null)
+    const [errorInfo, setErrorInfo] = React.useState<string>("")
     const [showError, setShowError] = React.useState<boolean>(false)
+    const [showErrorInfo, setShowErrorInfo] = React.useState<boolean>(false)
 
     function setState(val: boolean){
         props.setLaunching(val)
@@ -30,7 +32,10 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
     useEffect(() => {
         const logger = new Logger()
 
-        exposedFunctions("mc").on("initGame", () => setState(true))
+        exposedFunctions("mc").on("initGame", () => {
+            setState(true)
+            setErrorInfo("")
+        })
         exposedFunctions("mc").on("packageMode", () => {
             setLoadingState("query")
             setInfo("Preparing package install...")
@@ -98,12 +103,16 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
 
         exposedFunctions("mc").on("arguments", (m: string) => {logger.info(m)})
         exposedFunctions("mc").on("debug", (m: string) => {logger.debug(m)})
-        exposedFunctions("mc").on("data", (m: string) => {logger.log(m)})
+        exposedFunctions("mc").on("data", (m: string) => {
+            setErrorInfo(m)
+            logger.log(m)
+        })
     }, [])
 
     return (
         <>
             <Modal
+                sx={{outline: "none"}}
                 open={showError}
                 onClose={() => setShowError(false)}
                 closeAfterTransition
@@ -129,6 +138,23 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
                     >
                         <Typography id="transition-modal-title" variant="h6" component="h2">Launch Error</Typography>
                         <Typography id="transition-modal-description" sx={{ mt: 2 }}>{error}</Typography>
+                        {errorInfo !== "" && (
+                            <>
+                                <Collapse
+                                    in={showErrorInfo}
+                                >
+                                    <div className="my-2 p-2 bg-dark">{errorInfo}</div>
+                                </Collapse>
+                                <Button
+                                    variant="text"
+                                    onClick={() => {
+                                        setShowErrorInfo(!showErrorInfo)
+                                    }}
+                                >
+                                    {showErrorInfo ? "Show less" : "Show more"}
+                                </Button>
+                            </>
+                        )}
                     </Box>
                 </Fade>
             </Modal>
