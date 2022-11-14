@@ -19,7 +19,11 @@ function findJavaPaths() {
         if(platform === "win32"){
             paths = childProcess.execSync("where java.exe").toString().trim().split("\r\n")
         }else if(platform === "linux"){
-            paths = childProcess.execSync("update-alternatives --list java").toString().trim().split("\n")
+            try {
+                paths = childProcess.execSync("update-alternatives --list java").toString().trim().split("\n")
+            }catch{
+                paths = childProcess.execSync("which java").toString().trim().split("\n")
+            }
         }else{
             paths = childProcess.execSync("which java").toString().trim().split("\n")
         }
