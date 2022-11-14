@@ -96,9 +96,9 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
             }
         })
 
-        exposedFunctions("mc").on("arguments", logger.info)
-        exposedFunctions("mc").on("debug", logger.debug)
-        exposedFunctions("mc").on("data", logger.log)
+        exposedFunctions("mc").on("arguments", (m: string) => {logger.info(m)})
+        exposedFunctions("mc").on("debug", (m: string) => {logger.debug(m)})
+        exposedFunctions("mc").on("data", (m: string) => {logger.log(m)})
     }, [])
 
     return (
