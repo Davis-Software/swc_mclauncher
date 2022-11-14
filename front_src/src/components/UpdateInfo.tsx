@@ -2,25 +2,23 @@ import React, {useEffect} from "react"
 import {Box, Button, Fade, Modal, Typography} from "@mui/material";
 import {UpdateInfoType} from "../types/UpdateInfoType";
 import {exposedFunctions} from "../utils/constants";
+import parse from 'html-react-parser';
 
 function UpdateInfo(){
     const [open, setOpen] = React.useState(false)
     const [updateInfo, setUpdateInfo] = React.useState<UpdateInfoType | null>(null)
-    const releaseNotesRef = React.useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         exposedFunctions("ipc").on("update:info", (_: any, updateInfo: UpdateInfoType) => setUpdateInfo(updateInfo))
+        exposedFunctions("utils").checkForUpdates()
     }, [])
     useEffect(() => {
         setOpen(!!updateInfo)
     }, [updateInfo])
-    useEffect(() => {
-        if(!releaseNotesRef.current) return
-        releaseNotesRef.current.innerHTML = updateInfo?.releaseNotes || ""
-    }, [updateInfo, releaseNotesRef.current])
 
     return (
         <Modal
+            disableEnforceFocus
             open={open}
             onClose={() => setOpen(false)}
             closeAfterTransition
@@ -41,14 +39,17 @@ function UpdateInfo(){
                         bgcolor: 'background.paper',
                         border: '2px solid #000',
                         boxShadow: 24,
-                        p: 4
+                        p: 4,
+                        outline: "none !important"
                     }}
                 >
                     <Typography variant="h6" component="h2">
                         New Update Available: Version {updateInfo?.version}
                     </Typography>
                     <hr />
-                    <Typography ref={releaseNotesRef} sx={{ mt: 2, mb: 6 }} />
+                    <Typography sx={{ mt: 2, mb: 6 }}>
+                        {parse(updateInfo?.releaseNotes || "")}
+                    </Typography>
 
                     <span className="text-info position-absolute start-0 ps-3">
                         The update will be downloaded in the background automatically.

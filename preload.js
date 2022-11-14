@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld("utils", {
     },
     renderMarkdownFile: (file) => ipcRenderer.invoke("render-markdown-file", file),
     getRAMAmount: () => ipcRenderer.invoke("get-ram-amount"),
+    checkForUpdates: () => ipcRenderer.invoke("check-for-updates"),
 })
 contextBridge.exposeInMainWorld("ipc", {
     on: (channel, listener) => {

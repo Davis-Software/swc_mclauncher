@@ -11,6 +11,7 @@ const {autoUpdater} = require("electron-updater");
 
 
 let win
+let checkedForUpdates = false
 
 
 function MainWindow () {
@@ -34,9 +35,6 @@ function MainWindow () {
 
     win.identifier = "main-window"
     require("./back/update-service")
-    if(!config.devMode && config.autoUpdate) {
-        autoUpdater.checkForUpdates().then()
-    }
 
     win.forceClose = () => {
         win.allowClose = true
@@ -76,6 +74,13 @@ function MainWindow () {
     win.on("maximize", resizeEvent)
     win.on("unmaximize", resizeEvent)
 
+    ipcMain.handle("check-for-updates", () => {
+        if(!config.devMode && config.autoUpdate && !checkedForUpdates) {
+            autoUpdater.checkForUpdates().then(() => {
+                checkedForUpdates = true
+            })
+        }
+    })
     ipcMain.handle("dialog:showDialog", (event, options) => {
         return new Promise((resolve) => {
             dialog.showOpenDialog(win, options).then((canceled, result) => {

@@ -112,7 +112,7 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
     return (
         <>
             <Modal
-                sx={{outline: "none"}}
+                disableEnforceFocus
                 open={showError}
                 onClose={() => setShowError(false)}
                 closeAfterTransition
@@ -133,7 +133,8 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
                             bgcolor: 'background.paper',
                             border: '2px solid #000',
                             boxShadow: 24,
-                            p: 4
+                            p: 4,
+                            outline: "none !important"
                         }}
                     >
                         <Typography id="transition-modal-title" variant="h6" component="h2">Launch Error</Typography>
