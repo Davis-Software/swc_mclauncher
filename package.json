@@ -10,7 +10,7 @@
         "email": "support@software-city.org"
     },
     "name": "swc_mclauncher",
-    "version": "1.1.7",
+    "version": "1.1.8",
     "description": "A Minecraft Launcher for Software City",
     "repository": "https://github.com/Davis-Software/swc_mclauncher",
     "license": "MIT",
@@ -26,7 +26,7 @@
         "publishmacOS": "electron-builder --x64 --mac -p always"
     },
     "devDependencies": {
-        "electron": "^21.1.0",
+        "electron": "^21.3.0",
         "electron-builder": "^23.6.0",
         "js-yaml": "^4.1.0"
     },
