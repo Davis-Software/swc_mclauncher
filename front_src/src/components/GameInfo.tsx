@@ -8,7 +8,11 @@ function GameInfo() {
 
     React.useEffect(() => {
         exposedFunctions("mc").on("runningClients", setActiveClients)
-    })
+
+        return () => {
+            exposedFunctions("mc").off("runningClients", setActiveClients)
+        }
+    }, [])
 
     function GameInfoInner(){
         return activeClients ? (

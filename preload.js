@@ -64,6 +64,9 @@ contextBridge.exposeInMainWorld("mc", {
     },
     on(event, callback){
         ipcRenderer.on(`mc:${event}`, (e, ...args) => callback(...args))
+    },
+    off(event, callback){
+        ipcRenderer.off(`mc:${event}`, callback)
     }
 })
 contextBridge.exposeInMainWorld("settings", {
