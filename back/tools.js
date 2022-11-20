@@ -34,47 +34,6 @@ function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
 }
 
-function onObjectChange(object, onChange) {
-    const handler = {
-        get(target, property, receiver) {
-            try {
-                return new Proxy(target[property], handler)
-            } catch (err) {
-                return Reflect.get(target, property, receiver)
-            }
-        },
-        defineProperty(target, property, descriptor) {
-            onChange(target, property, descriptor)
-            return Reflect.defineProperty(target, property, descriptor)
-        },
-        deleteProperty(target, property) {
-            onChange()
-            return Reflect.deleteProperty(target, property)
-        }
-    }
-    return new Proxy(object, handler)
-}
-function onArrayChange(array, onChange){
-    return {
-        push(...args){
-            let out = array.push(...args)
-            onChange()
-            return out
-        },
-        splice(...args){
-            let out = array.splice(...args)
-            onChange()
-            return out
-        },
-        indexOf(...args){
-            return array.indexOf(...args)
-        },
-        get length(){
-            return array.length
-        }
-    }
-}
-
 function tryOrElse(fn, elseFn) {
     try {
         return fn()

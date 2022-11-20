@@ -6,14 +6,23 @@ const path = require("path");
 const fs = require("fs");
 const {compare} = require("compare-versions");
 const fsx = require("fs-extra");
-const {onArrayChange} = require("./tools");
 const {getMainWindow} = require("./electron-tools");
+const {randomUUID} = require("crypto")
+const ObservableSlim = require("observable-slim")
 
 
-const runningClients = onArrayChange([], () => {
-    invoke("mc:runningClients", runningClients.length)
-})
+const runningClients = ObservableSlim.create({}, false, sendRunningClients)
 let mcInstance = null
+
+
+function sendRunningClients(){
+    let clients = {}
+    for(let key in runningClients){
+        let client = runningClients[key]
+        clients[key] = {version: client.version, pid: client.pid, name: client.name}
+    }
+    invoke("mc:runningClients", JSON.parse(JSON.stringify(clients)))
+}
 
 
 function afterLaunchCalls(){
@@ -94,7 +103,8 @@ function launchVanilla(version) {
     }
 
     const launcher = new Client()
-    runningClients.push(launcher)
+    const launcherUUID = randomUUID()
+    runningClients[launcherUUID] = {version, launcher, pid: null, kill: null}
 
     const opts = {
         authorization: settings.get("credentials"),
@@ -115,18 +125,20 @@ function launchVanilla(version) {
         }
     }
 
-    launcher.launch(opts).then(() => {
+    launcher.launch(opts).then((childProcess) => {
         invoke("mc:gameLaunched")
+        runningClients[launcherUUID].pid = childProcess.pid
+        runningClients[launcherUUID].kill = () => childProcess.kill()
         afterLaunchCalls()
     }).catch((e) => {
-        runningClients.splice(runningClients.indexOf(launcher), 1)
+        delete runningClients[launcherUUID]
         invoke("mc:gameLaunchError", e)
     })
 
     launcher.on('arguments', (e) => invoke("mc:arguments", e))
     launcher.on('data', (e) => invoke("mc:data", e))
     launcher.on('close', (e) => {
-        runningClients.splice(runningClients.indexOf(launcher), 1)
+        delete runningClients[launcherUUID]
         invoke("mc:close", e)
         afterCloseCalls()
     })
@@ -180,7 +192,18 @@ function launchModded(manifest) {
     }
 
     const launcher = new Client()
-    runningClients.push(launcher)
+    const version = {
+        number: manifest.mcVersion,
+        type: manifest.type
+    }
+    const launcherUUID = randomUUID()
+    runningClients[launcherUUID] = {
+        version,
+        name: manifest.name,
+        launcher,
+        pid: null,
+        kill: null
+    }
 
     const opts = {
         clientPackage: installNeeded ? mcPackage : null,
@@ -190,10 +213,7 @@ function launchModded(manifest) {
 
         authorization: settings.get("credentials"),
         root: rootPath,
-        version: {
-            number: manifest.mcVersion,
-            type: manifest.type
-        },
+        version,
         customArgs: settings.get("launch-args"),
         memory: {
             max: settings.get("ram"),
@@ -209,19 +229,21 @@ function launchModded(manifest) {
         }
     }
 
-    launcher.launch(opts).then(() => {
+    launcher.launch(opts).then((childProcess) => {
         if(installNeeded) fs.writeFileSync(path.join(rootPath, "manifest.json"), JSON.stringify(manifest))
         invoke("mc:gameLaunched")
+        runningClients[launcherUUID].pid = childProcess.pid
+        runningClients[launcherUUID].kill = () => childProcess.kill()
         afterLaunchCalls()
     }).catch((e) => {
-        runningClients.splice(runningClients.indexOf(launcher), 1)
+        delete runningClients[launcherUUID]
         invoke("mc:gameLaunchError", e)
     })
 
     launcher.on('arguments', (e) => invoke("mc:arguments", e))
     launcher.on('data', (e) => invoke("mc:data", e))
     launcher.on('close', (e) => {
-        runningClients.splice(runningClients.indexOf(launcher), 1)
+        delete runningClients[launcherUUID]
         invoke("mc:close", e)
         afterCloseCalls()
     })
@@ -232,12 +254,25 @@ function launchModded(manifest) {
     launcher.on('progress', (e) => invoke("mc:progress", e))
 }
 
+function killClient(clientUUID) {
+    if(clientUUID === "all"){
+        Object.keys(runningClients).forEach(k => {
+            runningClients[k].kill()
+        })
+        return
+    }
+    if(!runningClients[clientUUID] && runningClients[clientUUID].kill !== null) return
+    runningClients[clientUUID].kill()
+}
+
 registerIpcListener("dialog:askLogin", askLogin)
 registerIpcListener("dialog:askValidate", askValidate)
 registerIpcListener("dialog:refreshLogin", refreshLogin)
 registerIpcListener("dialog:logout", logout)
 registerIpcListener("mc:launchVanilla", (e, v) => launchVanilla(v))
 registerIpcListener("mc:launchModded", (e, v) => launchModded(v))
+registerIpcListener("mc:sendRunningClients", () => sendRunningClients())
+registerIpcListener("mc:killClient", (e, v) => killClient(v))
 
 module.exports = {
     askLogin,

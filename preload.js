@@ -62,6 +62,12 @@ contextBridge.exposeInMainWorld("mc", {
     launchModded: (modPack) => {
         return ipcRenderer.invoke("mc:launchModded", modPack)
     },
+    sendRunningClients: () => {
+        return ipcRenderer.invoke("mc:sendRunningClients")
+    },
+    killClient: (clientUUID) => {
+        return ipcRenderer.invoke("mc:killClient", clientUUID)
+    },
     on(event, callback){
         ipcRenderer.on(`mc:${event}`, (e, ...args) => callback(...args))
     },

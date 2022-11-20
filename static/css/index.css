@@ -36,24 +36,29 @@ body{
     height: 36px;
     display: flex;
 }
-#window-frame #user-dropdown{
+#window-frame #user-dropdown, #window-frame #game-info{
     transition: all .15s;
     -webkit-app-region: no-drag;
 }
+#window-frame #user-dropdown, #window-frame #game-info a{
+    cursor: pointer;
+}
 #window-frame #user-dropdown:hover{
     background: rgba(65, 65, 65, .25);
-    cursor: pointer;
 }
 #window-frame #user-dropdown:active{
     background: rgb(84, 84, 84, .25);
 }
-#window-frame #user-dropdown .button{
-    color: white;
+#window-frame #user-dropdown .button, #window-frame #game-info .button{
     height: 36px;
     border: none;
     border-radius: 0;
     background: none;
     padding: 0 10px;
+    cursor: pointer;
+}
+#window-frame #user-dropdown .button{
+    color: white;
 }
 #window-frame .frame-drag-section{
     position: fixed;
