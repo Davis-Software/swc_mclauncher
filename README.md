@@ -23,21 +23,21 @@
 * 🛠 Work in progress
 * ✅ Finished
 
-Feature|Description|State
----|---|---
-Bundled Java|Java installation bundled with the launcher (Java 8 and 16)|⏳
-Minecraft Account Support|Support for Minecraft account logins|✅
-Mojang Account Support|Support for Mojang account logins|❌
-Session Handling|Store and refresh Microsoft login sessions as needed|✅
-Minecraft Vanilla|Launch Minecraft Vanilla|✅
-Minecraft Forge|Launch Minecraft Forge (only custom SWC modpacks)|✅
-Support for Windows|Support for Windows|✅
-Support for Linux|Support for Linux|🛠
-Support for MacOS|Support for MacOS|🛠
-Configurable|Most minecraft and java launch options are accessible|✅
-Easy Account Switching|Switch between multiple accounts easily|✅
-Multiple Instances|Launch multiple instances of Minecraft|✅
-
+| Feature                   | Description                                                 | State |
+|---------------------------|-------------------------------------------------------------|-------|
+| Bundled Java              | Java installation bundled with the launcher (Java 8 and 16) | ⏳     |
+| Minecraft Account Support | Support for Minecraft account logins                        | ✅     |
+| Mojang Account Support    | Support for Mojang account logins                           | ❌     |
+| Session Handling          | Store and refresh Microsoft login sessions as needed        | ✅     |
+| Minecraft Vanilla         | Launch Minecraft Vanilla                                    | ✅     |
+| Minecraft Forge           | Launch Minecraft Forge (only custom SWC modpacks)           | ✅     |
+| Support for Windows       | Support for Windows                                         | ✅     |
+| Support for Linux         | Support for Linux                                           | 🛠    |
+| Support for MacOS         | Support for MacOS                                           | 🛠    |
+| Configurable              | Most minecraft and java launch options are accessible       | ✅     |
+| Easy Account Switching    | Switch between multiple accounts easily                     | ✅     |
+| Multiple Instances        | Launch multiple instances of Minecraft                      | ✅     |
+| Handle Instances          | Manage instances of Minecraft (kill, ...)                   | ✅     |
 
 # Installation
 * Download an installer
