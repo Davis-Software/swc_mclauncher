@@ -1,8 +1,6 @@
 const fs = require("fs")
 const path = require("path")
 const {registerIpcListener} = require("./ipc-handler");
-const MarkdownIt = require("markdown-it");
-const config = require("./config");
 
 class EventEmitter {
     constructor(){
@@ -74,31 +72,6 @@ function walkDir(dir, excluded, filterFunc, progressCallback, errorCallback) {
 function sleep(x) {
     Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, x)
 }
-
-const builtMarkdown = {}
-registerIpcListener("render-markdown-file", (e, file) => {
-    if(builtMarkdown[file] && !config.devMode){
-        return builtMarkdown[file]
-    }
-
-    try {
-        let data = file !== "README.md" ?
-            fs.readFileSync(
-                path.join(__dirname, "../templates/components", file),
-                "utf8"
-            ) :
-            fs.readFileSync(
-                path.join(__dirname, "../README.md"),
-                "utf8"
-            )
-
-        let md = MarkdownIt({html: true, linkify: true}).render(data)
-        builtMarkdown[file] = md
-        return md
-    } catch (err) {
-        return false
-    }
-})
 
 registerIpcListener("open-explorer", (e, file) => {
     if(fs.lstatSync(file).isDirectory()){

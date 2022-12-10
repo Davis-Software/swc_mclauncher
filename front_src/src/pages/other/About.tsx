@@ -1,19 +1,13 @@
-import React, {useEffect} from "react";
+import React from "react";
 import PageBase from "../PageBase";
-import {exposedFunctions} from "../../utils/constants";
+import MarkdownRenderer from "../../components/MarkdownRenderer";
 
 function About(){
-    const aboutRef = React.useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        exposedFunctions("utils").renderMarkdownFile("README.md").then((html: string) => {
-            aboutRef.current!.innerHTML = html;
-        })
-    }, [])
-
     return (
         <PageBase>
-            <div ref={aboutRef} className="container mt-3"></div>
+            <div className="m-3">
+                <MarkdownRenderer url="https://raw.githubusercontent.com/Davis-Software/swc_mclauncher/master/README.md" />
+            </div>
         </PageBase>
     )
 }

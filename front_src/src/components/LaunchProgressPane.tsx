@@ -32,43 +32,51 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
     useEffect(() => {
         const logger = new Logger()
 
-        exposedFunctions("mc").on("initGame", () => {
+        function handleInitGame(){
             setState(true)
             setErrorInfo("")
-        })
-        exposedFunctions("mc").on("packageMode", () => {
+        }
+        function handlePackageMode(){
             setLoadingState("query")
             setInfo("Preparing package install...")
-        })
-        exposedFunctions("mc").on("packageInstall", () => {
+        }
+        function handlePackageInstall(){
             setLoadingState("determinate")
             setInfo("Getting package...")
-        })
-        exposedFunctions("mc").on("package-extract", () => setState(true))
-        exposedFunctions("mc").on("gameLaunched", () => {
+        }
+        function handlePackageExtract(){
+            setState(true)
+        }
+        function handleGameLaunched(){
             setLoadingState("determinate")
             setProgress(100)
             setInfo("Game launched!")
             setTimeout(() => setState(false), 2500)
-        })
-        exposedFunctions("mc").on("gameLaunchError", (e: string) => {
+        }
+        function handleGameLaunchError(e: string){
             logger.error(e)
             setError(<>
                 Game launch error.<br />{e} <br /><br /><br />Please check the console for more information. (Ctrl + Shift + I)
             </>)
             setShowError(true)
             setState(false)
-        })
-        exposedFunctions("mc").on("close", (exitCode: number) => {
+        }
+        function handleClose(exitCode: number | null){
             setState(false)
             if(exitCode === 0) return
-            setError(<>
-                Game exited with code {exitCode}. <br />Is your Java version compatible with this version? <br /><br /><br />Please check the console for more information. (Ctrl + Shift + I)
-            </>)
+            if(exitCode === null){
+                setError(<>
+                    Game exited unexpectedly. <br /><br /><br />Please check the console for more information. (Ctrl + Shift + I)
+                </>)
+            }else{
+                setError(<>
+                    Game exited with code {exitCode}. <br />Is your Java version compatible with this version? <br /><br /><br />Please check the console for more information. (Ctrl + Shift + I)
+                </>)
+            }
             setShowError(true)
-        })
+        }
 
-        exposedFunctions("mc").on("download-status", (e: McLcDownloadStatus) => {
+        function handleDownloadStatus(e: McLcDownloadStatus){
             if(e.type === "native") return
             if(e.type === "client-package"){
                 setProgress(e.current / e.total * 100)
@@ -79,8 +87,8 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
                 return
             }
             setBuffer(e.current / e.total * 100)
-        })
-        exposedFunctions("mc").on("progress", (e: McLcProgress) => {
+        }
+        function handleProgress(e: McLcProgress){
             switch (e.type){
                 case "natives":
                     setLoadingState("query")
@@ -99,14 +107,50 @@ function LaunchProgressPane(props: LaunchProgressPaneProps){
                     setProgress(e.task / e.total * 100)
                     break
             }
-        })
+        }
 
-        exposedFunctions("mc").on("arguments", (m: string) => {logger.info(m)})
-        exposedFunctions("mc").on("debug", (m: string) => {logger.debug(m)})
-        exposedFunctions("mc").on("data", (m: string) => {
+        function handleArguments(m: string){
+            logger.info(m)
+        }
+        function handleDebug(m: string){
+            logger.debug(m)
+        }
+        function handleData(m: string){
             setErrorInfo(m)
             logger.log(m)
-        })
+        }
+
+        exposedFunctions("mc").on("initGame", handleInitGame)
+        exposedFunctions("mc").on("packageMode", handlePackageMode)
+        exposedFunctions("mc").on("packageInstall", handlePackageInstall)
+        exposedFunctions("mc").on("package-extract", handlePackageExtract)
+        exposedFunctions("mc").on("gameLaunched", handleGameLaunched)
+        exposedFunctions("mc").on("gameLaunchError", handleGameLaunchError)
+        exposedFunctions("mc").on("close", handleClose)
+
+        exposedFunctions("mc").on("download-status", handleDownloadStatus)
+        exposedFunctions("mc").on("progress", handleProgress)
+
+        exposedFunctions("mc").on("arguments", handleArguments)
+        exposedFunctions("mc").on("debug", handleDebug)
+        exposedFunctions("mc").on("data", handleData)
+
+        return () => {
+            exposedFunctions("mc").off("initGame")
+            exposedFunctions("mc").off("packageMode")
+            exposedFunctions("mc").off("packageInstall")
+            exposedFunctions("mc").off("package-extract")
+            exposedFunctions("mc").off("gameLaunched")
+            exposedFunctions("mc").off("gameLaunchError")
+            exposedFunctions("mc").off("close")
+
+            exposedFunctions("mc").off("download-status")
+            exposedFunctions("mc").off("progress")
+
+            exposedFunctions("mc").off("arguments")
+            exposedFunctions("mc").off("debug")
+            exposedFunctions("mc").off("data")
+        }
     }, [])
 
     return (

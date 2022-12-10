@@ -164,6 +164,8 @@ function SettingsCheckbox(props: SettingsCheckboxProps){
 }
 
 function Settings(){
+    const [ready, setReady] = React.useState(false)
+
     const [ramTotal, setRamTotal] = React.useState(99999);
     const [ramSelected, setRamSelected] = React.useState<number | null>(null);
 
@@ -199,52 +201,48 @@ function Settings(){
         getSettingBoolean("show-beta-and-alpha").then(setShowBetaAndAlpha)
         getSetting("launch-args").then(setLaunchArgs)
         getSettingBoolean("loggingActive").then(setDebugLogging)
+
+        setReady(true)
+        return () => setReady(false)
     }, [])
 
 
     useEffect(() => {
-        if(!ramSelected) return
-        setSetting("ram", ramSelected)
-    }, [ramSelected])
+        function checkAndSetSetting(setting: string, value: any){
+            if(!value) return
+            setSetting(setting, value)
+        }
+
+        if(!ready) return
+
+        checkAndSetSetting("ram", ramSelected)
+        checkAndSetSetting("mcPath", mcPath)
+        checkAndSetSetting("javaPath", javaPath)
+        setSetting("splash-width", width)
+        setSetting("splash-height", height)
+        setSetting("minimize-while-playing", minimizeWhilePlaying)
+        setSetting("close-on-game-exit", closeOnGameExit)
+        setSetting("show-snapshots", showSnapshots)
+        setSetting("show-beta-and-alpha", showBetaAndAlpha)
+        setSetting("launch-args", launchArgs)
+        setSetting("loggingActive", debugLogging)
+    }, [
+        ramSelected,
+        mcPath,
+        javaPath,
+        width,
+        height,
+        minimizeWhilePlaying,
+        closeOnGameExit,
+        showSnapshots,
+        showBetaAndAlpha,
+        launchArgs,
+        debugLogging
+    ])
+
     function valuetext(value: number) {
         return `${(value / 1024).toFixed(1)}GB`;
     }
-
-    useEffect(() => {
-        if(!mcPath) return
-        setSetting("mcPath", mcPath)
-    }, [mcPath])
-    useEffect(() => {
-        if(!javaPath) return
-        setSetting("javaPath", javaPath)
-    }, [javaPath])
-
-    useEffect(() => {
-        setSetting("splash-width", width)
-    }, [width])
-    useEffect(() => {
-        setSetting("splash-height", height)
-    }, [height])
-
-    useEffect(() => {
-        setSetting("minimize-while-playing", minimizeWhilePlaying)
-    }, [minimizeWhilePlaying])
-    useEffect(() => {
-        setSetting("close-on-game-exit", closeOnGameExit)
-    }, [closeOnGameExit])
-
-    useEffect(() => {
-        setSetting("show-snapshots", showSnapshots)
-    }, [showSnapshots])
-    useEffect(() => {
-        setSetting("show-beta-and-alpha", showBetaAndAlpha)
-    }, [showBetaAndAlpha])
-    useEffect(() => {
-        setSetting("launch-args", launchArgs)
-    }, [launchArgs])
-    useEffect(() => {
-        setSetting("loggingActive", debugLogging)
-    }, [debugLogging])
 
     return (
         <PageBase>
@@ -280,8 +278,8 @@ function Settings(){
                             <SettingsInput name="Java Installation" type="dropdown-file" debugMode={debugLogging} value={javaPath!} onChange={(v) => setJavaPath(v as string)} />
                         </tr>
                         <tr>
-                            <SettingsInput name="SplashScreen Width" type="number" value={width} onChange={(v) => setWidth(v as number)} />
-                            <SettingsInput name="SplashScreen Height" type="number" value={height} onChange={(v) => setHeight(v as number)} />
+                            <SettingsInput name="SplashScreen Width" type="number" value={width} onChange={(v) => setWidth(Number(v) as number)} />
+                            <SettingsInput name="SplashScreen Height" type="number" value={height} onChange={(v) => setHeight(Number(v) as number)} />
                         </tr>
                     </tbody>
                 </table>

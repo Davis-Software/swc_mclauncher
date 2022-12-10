@@ -6,13 +6,19 @@ contextBridge.exposeInMainWorld("utils", {
     hashing: {
         sha512: (string) => crypto.createHash("sha512").update(string).digest("hex")
     },
-    renderMarkdownFile: (file) => ipcRenderer.invoke("render-markdown-file", file),
     getRAMAmount: () => ipcRenderer.invoke("get-ram-amount"),
     checkForUpdates: () => ipcRenderer.invoke("check-for-updates"),
 })
 contextBridge.exposeInMainWorld("ipc", {
     on: (channel, listener) => {
         ipcRenderer.on(channel, listener)
+    },
+    off: (channel, listener=null) => {
+        if(listener !== null){
+            ipcRenderer.off(channel, listener)
+        }else{
+            ipcRenderer.removeAllListeners(channel)
+        }
     }
 })
 contextBridge.exposeInMainWorld("controls", {
@@ -69,10 +75,14 @@ contextBridge.exposeInMainWorld("mc", {
         return ipcRenderer.invoke("mc:killClient", clientUUID)
     },
     on(event, callback){
-        ipcRenderer.on(`mc:${event}`, (e, ...args) => callback(...args))
+        ipcRenderer.on(`mc:${event}`,(e, ...args) => callback(...args))
     },
-    off(event, callback){
-        ipcRenderer.off(`mc:${event}`, callback)
+    off(event, callback=null){
+        if(callback !== null){
+            ipcRenderer.off(`mc:${event}`, callback)
+        }else{
+            ipcRenderer.removeAllListeners(`mc:${event}`)
+        }
     }
 })
 contextBridge.exposeInMainWorld("settings", {

@@ -12,21 +12,25 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.10.14",
-    "@mui/material": "^5.10.14",
+    "@mui/icons-material": "^5.10.16",
+    "@mui/material": "^5.10.17",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-transition-group": "^4.4.5",
     "compare-versions": "^5.0.1",
-    "html-react-parser": "^3.0.4"
+    "html-react-parser": "^3.0.4",
+    "react-markdown": "^8.0.4",
+    "react-syntax-highlighter": "^15.5.0",
+    "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
-    "@types/react": "^18.0.25",
+    "@types/node": "^18.11.12",
+    "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
-    "ts-loader": "^9.4.1",
-    "typescript": "^4.9.3",
+    "@types/react-syntax-highlighter": "^15.5.5",
+    "ts-loader": "^9.4.2",
+    "typescript": "^4.9.4",
     "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.0"
+    "webpack-cli": "^5.0.1"
   }
 }

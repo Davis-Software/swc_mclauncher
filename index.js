@@ -89,6 +89,9 @@ function MainWindow () {
         })
     })
 
+    win.webContents.on("devtools-opened", () => {
+        invoke("window:devTools")
+    })
     win.on('focus', () => {
         win.flashFrame(false)
         BrowserWindow.getAllWindows().forEach(w => {

@@ -1,0 +1,215 @@
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #2c3036;
+  color: #DCDCDC;
+}
+
+.hljs-keyword,
+.hljs-literal,
+.hljs-symbol,
+.hljs-name {
+  color: #569CD6;
+}
+.hljs-link {
+  color: #569CD6;
+  text-decoration: underline;
+}
+
+.hljs-built_in,
+.hljs-type {
+  color: #4EC9B0;
+}
+
+.hljs-number,
+.hljs-class {
+  color: #B8D7A3;
+}
+
+.hljs-string,
+.hljs-meta-string {
+  color: #D69D85;
+}
+
+.hljs-regexp,
+.hljs-template-tag {
+  color: #9A5334;
+}
+
+.hljs-subst,
+/*.hljs-function,*/
+.hljs-title,
+.hljs-params,
+.hljs-formula {
+  color: #DCDCDC;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #57A64A;
+  font-style: italic;
+}
+
+.hljs-doctag {
+  color: #608B4E;
+}
+
+.hljs-meta,
+.hljs-meta-keyword,
+.hljs-tag {
+  color: #9B9B9B;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #BD63C5;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-builtin-name {
+  color: #9CDCFE;
+}
+
+.hljs-section {
+  color: gold;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-bullet,
+.hljs-selector-tag,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #D7BA7D;
+}
+
+.hljs-addition {
+  background-color: #144212;
+  display: inline-block;
+  width: 100%;
+}
+
+.hljs-deletion {
+  background-color: #600;
+  display: inline-block;
+  width: 100%;
+}
+
+
+
+:root{
+    --color-text-tertiary: #8b949e;
+    --color-markdown-blockquote-border: #3b434b;
+    --color-markdown-table-border: #3b434b;
+    --color-markdown-table-tr-border: #272c32;
+}
+
+.hljs-meta{
+    color: #4ec9b0;
+}
+.hljs-title{
+    color: #dcdcaa;
+}
+
+
+
+code{
+    padding: .2em .4em;
+    margin: 0;
+    font-size: 85%;
+    border-radius: 6px;
+    color: #cccccc !important;
+    background-color: #2c3036 !important;
+}
+
+.markdown-container>:first-child {
+    margin-top: 0!important;
+}
+.markdown-container h1, .markdown-container h2 {
+    padding-bottom: .3em;
+    border-bottom: 1px solid #2b3036;
+}
+.markdown-container hr {
+    height: .25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: #21262d;
+    border: 0;
+}
+.markdown-container h1 {
+    font-size: 2em;
+}
+.markdown-container h1, .markdown-container h2, .markdown-container h3, .markdown-container h4, .markdown-container h5, .markdown-container h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.markdown-container pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    font-size: 100% !important;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: initial;
+    border: 0;
+}
+.markdown-container blockquote>:last-child {
+    margin-bottom: 0;
+}
+.markdown-container pre {
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #2c3036 !important;
+    border-radius: 6px;
+}
+.markdown-container blockquote, .markdown-container details, .markdown-container dl, .markdown-container ol, .markdown-container p, .markdown-container pre, .markdown-container table, .markdown-container ul {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+.markdown-container blockquote {
+    padding: 0 1em;
+    color: var(--color-text-tertiary);
+    border-left: .25em solid var(--color-markdown-blockquote-border);
+}
+.markdown-container blockquote p, .markdown-container blockquote h1, .markdown-container blockquote h2, .markdown-container blockquote h3, .markdown-container blockquote h4, .markdown-container blockquote h5, .markdown-container blockquote h6, .markdown-container blockquote ul li *, .markdown-container blockquote ol li *{
+    color: inherit;
+}
+.markdown-container table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow: auto;
+}
+.markdown-container table tr {
+    background-color: var(--bs-dark);
+    border-top: 1px solid var(--color-markdown-table-tr-border);
+}
+.markdown-container table td, .markdown-container table th {
+    padding: 6px 13px;
+    border: 1px solid var(--color-markdown-table-border);
+}
+.markdown-container table th {
+    font-weight: 600;
+}
+.markdown-container table tr:nth-child(2n) {
+    background-color: #2c3036;
+}
+.markdown-container img{
+    max-width: 100%;
+}

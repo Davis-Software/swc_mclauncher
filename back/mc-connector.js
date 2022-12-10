@@ -127,12 +127,21 @@ function launchVanilla(version) {
 
     launcher.launch(opts).then((childProcess) => {
         invoke("mc:gameLaunched")
-        runningClients[launcherUUID].pid = childProcess.pid
-        runningClients[launcherUUID].kill = () => childProcess.kill()
+
+        if(!childProcess){
+            invoke("mc:data", "Spawning child process failed because of an unknown error")
+            throw new Error("Client crashed before launch")
+        }
+
+        runningClients[launcherUUID].pid = childProcess.pid | null
+        runningClients[launcherUUID].kill = () => {
+            invoke("mc:data", "Killing child process...")
+            childProcess.kill()
+        }
         afterLaunchCalls()
     }).catch((e) => {
         delete runningClients[launcherUUID]
-        invoke("mc:gameLaunchError", e)
+        invoke("mc:gameLaunchError", e.message)
     })
 
     launcher.on('arguments', (e) => invoke("mc:arguments", e))
@@ -232,12 +241,21 @@ function launchModded(manifest) {
     launcher.launch(opts).then((childProcess) => {
         if(installNeeded) fs.writeFileSync(path.join(rootPath, "manifest.json"), JSON.stringify(manifest))
         invoke("mc:gameLaunched")
+
+        if(!childProcess){
+            invoke("mc:data", "Spawning child process failed because of an unknown error")
+            throw new Error("Client crashed before launch")
+        }
+
         runningClients[launcherUUID].pid = childProcess.pid
-        runningClients[launcherUUID].kill = () => childProcess.kill()
+        runningClients[launcherUUID].kill = () => {
+            invoke("mc:data", "Killing child process...")
+            childProcess.kill()
+        }
         afterLaunchCalls()
     }).catch((e) => {
         delete runningClients[launcherUUID]
-        invoke("mc:gameLaunchError", e)
+        invoke("mc:gameLaunchError", e.message)
     })
 
     launcher.on('arguments', (e) => invoke("mc:arguments", e))

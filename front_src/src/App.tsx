@@ -12,6 +12,7 @@ import LaunchProgressPane from "./components/LaunchProgressPane";
 import UpdateInfo from "./components/UpdateInfo";
 import GameInfo from "./components/GameInfo";
 import {exposedFunctions} from "./utils/constants";
+import DevConsoleHelper from "./components/DevConsoleHelper";
 
 
 function App(){
@@ -92,7 +93,10 @@ function App(){
                     </Box>
                 ) : <></>
             )}
+
             <UpdateInfo />
+            <DevConsoleHelper />
+
         </ThemeProvider>
     )
 }
