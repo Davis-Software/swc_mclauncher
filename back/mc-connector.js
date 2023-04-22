@@ -25,6 +25,9 @@ function sendRunningClients(){
 }
 
 
+function ensureFolder(){
+    fs.mkdirSync(settings.get("mcPath"), {recursive: true})
+}
 function afterLaunchCalls(){
     if(settings.get("minimize-while-playing")){
         getMainWindow().hide()
@@ -95,6 +98,7 @@ function logout(){
 
 function launchVanilla(version) {
     invoke("mc:initGame")
+    ensureFolder()
 
     if(!askValidate()){
         refreshLogin(true).then(() => launchVanilla(version))
@@ -159,6 +163,7 @@ function launchVanilla(version) {
 
 function launchModded(manifest) {
     invoke("mc:initGame")
+    ensureFolder()
 
     if(!askValidate()){
         refreshLogin(true).then(() => launchModded(manifest))
