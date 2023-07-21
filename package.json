@@ -10,7 +10,7 @@
         "email": "support@software-city.org"
     },
     "name": "swc_mclauncher",
-    "version": "1.1.10",
+    "version": "1.1.11",
     "description": "A Minecraft Launcher for Software City",
     "repository": "https://github.com/Davis-Software/swc_mclauncher",
     "license": "MIT",
