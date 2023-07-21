@@ -28,5 +28,5 @@ module.exports = {
         ]
     },
 
-    devtool: devMode ? "source-map" : "none"
+    devtool: devMode ? "source-map" : "nosources-source-map"
 }
