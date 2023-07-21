@@ -288,6 +288,23 @@ function killClient(clientUUID) {
     runningClients[clientUUID].kill()
 }
 
+function cleanLogs(modpackId) {
+    const rootPath = path.join(settings.get("mcPath"), "mod-packs", modpackId)
+
+    let del = [
+        "logs"
+    ]
+
+    fs.readdirSync(rootPath).filter(n => del.includes(n)).forEach(file => {
+        fsx.removeSync(path.join(rootPath, file))
+    })
+}
+
+function uninstallModpack(modpackId) {
+    const rootPath = path.join(settings.get("mcPath"), "mod-packs", modpackId)
+    fsx.removeSync(rootPath)
+}
+
 registerIpcListener("dialog:askLogin", askLogin)
 registerIpcListener("dialog:askValidate", askValidate)
 registerIpcListener("dialog:refreshLogin", refreshLogin)
@@ -296,6 +313,8 @@ registerIpcListener("mc:launchVanilla", (e, v) => launchVanilla(v))
 registerIpcListener("mc:launchModded", (e, v) => launchModded(v))
 registerIpcListener("mc:sendRunningClients", () => sendRunningClients())
 registerIpcListener("mc:killClient", (e, v) => killClient(v))
+registerIpcListener("mc:cleanLogs", (e, v) => cleanLogs(v))
+registerIpcListener("mc:uninstallModpack", (e, v) => uninstallModpack(v))
 
 module.exports = {
     askLogin,

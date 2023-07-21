@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld("utils", {
     },
     getRAMAmount: () => ipcRenderer.invoke("get-ram-amount"),
     checkForUpdates: () => ipcRenderer.invoke("check-for-updates"),
+    openInExplorer: (path) => ipcRenderer.invoke("open-in-explorer", path),
 })
 contextBridge.exposeInMainWorld("ipc", {
     on: (channel, listener) => {
@@ -74,15 +75,21 @@ contextBridge.exposeInMainWorld("mc", {
     killClient: (clientUUID) => {
         return ipcRenderer.invoke("mc:killClient", clientUUID)
     },
-    on(event, callback){
+    on: (event, callback) => {
         ipcRenderer.on(`mc:${event}`,(e, ...args) => callback(...args))
     },
-    off(event, callback=null){
+    off: (event, callback=null) => {
         if(callback !== null){
             ipcRenderer.off(`mc:${event}`, callback)
         }else{
             ipcRenderer.removeAllListeners(`mc:${event}`)
         }
+    },
+    cleanLogs: (modpack) => {
+        ipcRenderer.invoke("mc:cleanLogs", modpack)
+    },
+    uninstallModpack: (modpack) => {
+        ipcRenderer.invoke("mc:uninstallModpack", modpack)
     }
 })
 contextBridge.exposeInMainWorld("settings", {

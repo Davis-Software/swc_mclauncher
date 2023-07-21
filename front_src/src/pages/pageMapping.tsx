@@ -9,6 +9,7 @@ import MinecraftVanilla, {MinecraftVanillaLaunchBar} from "./MinecraftVanilla";
 import Profile from "./Profile";
 import SwitchAccount from "./other/SwitchAccount";
 import About from "./other/About";
+import {ModPackType} from "../types/modPackType";
 
 async function loadModPacks() {
     let packs = await (await fetch("https://projects.software-city.org/resources/minecraft/modded/modpacks/packs.json")).json()
@@ -35,7 +36,7 @@ interface pageInterface {
     bottomNav?: boolean
     noSidebar?: boolean
     hide?: boolean
-    data?: any
+    data?: ModPackType
 }
 interface pageMappingInterface {
     [key: string]: pageInterface;

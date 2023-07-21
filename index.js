@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain } = require("electron")
+const { app, BrowserWindow, dialog, ipcMain, shell } = require("electron")
 const path = require("path");
 
 const config = require("./back/config")
@@ -87,6 +87,9 @@ function MainWindow () {
                 resolve(canceled, result)
             })
         })
+    })
+    ipcMain.handle("open-in-explorer", (event, modpackId) => {
+        shell.openPath(path.join(settings.get("mcPath"), "mod-packs", modpackId))
     })
 
     win.webContents.on("devtools-opened", () => {
