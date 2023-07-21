@@ -1,21 +1,42 @@
 import React, {useEffect} from "react"
 import PageBase from "./PageBase";
 import {LaunchBarCustomContent, LaunchBarListContent} from "../components/LaunchBarComponents";
-import {Button} from "@mui/material";
+import {Button, Tooltip} from "@mui/material";
 import {getSetting} from "../utils/settings";
 import {exposedFunctions} from "../utils/constants";
 import {ModPackType} from "../types/modPackType";
 import Pane from "../components/Pane";
+import {compare} from "compare-versions"
 
 interface ModPackLaunchBarProps {
     modPack: ModPackType
 }
 function ModPackLaunchBar(props: ModPackLaunchBarProps){
     const [ramSetting, setRamSetting] = React.useState<number>(0)
+    const [javaVersion, setJavaVersion] = React.useState<string>("")
+    const [javaVersionMalCompliant, setJavaVersionMalCompliant] = React.useState<boolean>(false)
+
+    const [javaPath, setJavaPath] = React.useState<string>("")
+    const [javaVersions, setJavaVersions] = React.useState<{path: string, version: string, jdk: boolean}[]>([])
 
     useEffect(() => {
         getSetting("ram").then(setRamSetting)
+        getSetting("javaPath").then(setJavaPath)
+        getSetting("javaPaths").then(setJavaVersions)
     }, [])
+    useEffect(() => {
+        const javaVersionIndex = javaVersions.findIndex(v => v.path === javaPath)
+        if(javaVersionIndex === -1) {
+            setJavaVersionMalCompliant(false)
+            return
+        }
+        setJavaVersion(javaVersions[javaVersionIndex].version.split("_")[0])
+    }, [javaPath, javaVersions])
+    useEffect(() => {
+        if(javaVersion === "") return
+        setJavaVersionMalCompliant(!!props.modPack.minJavaVersion &&
+            compare(props.modPack.minJavaVersion, javaVersion, ">"))
+    }, [javaVersion])
 
     function handleButtonClick(){
         exposedFunctions("mc").launchModded(props.modPack)
@@ -29,16 +50,26 @@ function ModPackLaunchBar(props: ModPackLaunchBarProps){
             </LaunchBarListContent>
 
             <LaunchBarCustomContent>
-                <Button
-                    variant="outlined"
-                    sx={{height: "100%"}}
-                    color="success"
-                    fullWidth
-                    className="attach-candle btn-outline-success"
-                    onClick={handleButtonClick}
+                <Tooltip
+                    title={javaVersionMalCompliant ?
+                        `The minimum required java version is "${props.modPack.minJavaVersion}". 
+                        \nPlease select the appropriate version in Settings.` : ""}
+                    placement="top"
                 >
-                    Play
-                </Button>
+                    <div className="w-100 h-100">
+                        <Button
+                            variant="outlined"
+                            sx={{height: "100%"}}
+                            color="success"
+                            fullWidth
+                            className="attach-candle btn-outline-success"
+                            onClick={handleButtonClick}
+                            disabled={!javaVersion || javaVersionMalCompliant}
+                        >
+                            Play
+                        </Button>
+                    </div>
+                </Tooltip>
             </LaunchBarCustomContent>
 
             <LaunchBarListContent right>

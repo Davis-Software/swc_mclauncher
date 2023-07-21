@@ -10,6 +10,7 @@ interface ModPackType{
     override: boolean;
     "override-options": any[];
     type: string;
+    minJavaVersion?: string;
 }
 
 export type { ModPackType };
