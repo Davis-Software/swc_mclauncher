@@ -10,3 +10,6 @@ static/js/views/main.js.LICENSE.txt
 dist/
 build/
 electron-builder.env
+
+package-lock.json
+front_src/package-lock.json
