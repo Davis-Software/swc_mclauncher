@@ -6,7 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const {compare} = require("compare-versions");
 const fsx = require("fs-extra");
-const {getMainWindow} = require("./electron-tools");
+const {getMainWindow, errorWindow} = require("./electron-tools");
 const {randomUUID} = require("crypto")
 const ObservableSlim = require("observable-slim")
 
@@ -302,6 +302,10 @@ function cleanLogs(modpackId) {
 
 function uninstallModpack(modpackId) {
     const rootPath = path.join(settings.get("mcPath"), "mod-packs", modpackId)
+    if(!fs.existsSync(rootPath)) {
+        errorWindow("Modpack not found", "The modpack you are trying to uninstall does not exist")
+        return
+    }
     fsx.removeSync(rootPath)
 }
 
