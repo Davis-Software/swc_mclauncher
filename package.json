@@ -26,15 +26,15 @@
         "publishmacOS": "electron-builder --x64 --mac -p always"
     },
     "devDependencies": {
-        "electron": "^24.1.2",
-        "electron-builder": "^24.2.1",
+        "electron": "^26.2.1",
+        "electron-builder": "^24.6.4",
         "js-yaml": "^4.1.0"
     },
     "dependencies": {
-        "minecraft-launcher-core": "^3.16.16",
-        "msmc": "^4.0.0-pre7",
-        "electron-updater": "^5.3.0",
-        "compare-versions": "^5.0.1",
+        "minecraft-launcher-core": "^3.17.2",
+        "msmc": "4.0.0-pre7",
+        "electron-updater": "^6.1.4",
+        "compare-versions": "^6.1.0",
         "fs-extra": "^11.1.1",
         "observable-slim": "^0.1.6"
     },

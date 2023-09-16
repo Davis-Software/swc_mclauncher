@@ -5,32 +5,32 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config config/webpack.config.js",
-    "build:prod": "webpack --config config/webpack-build-only.config.js"
+    "prod": "webpack --config config/webpack-build-only.config.js"
   },
   "author": "Davis_Software",
   "license": "MIT",
   "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
-    "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.12.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.9",
+    "@mui/material": "^5.14.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-transition-group": "^4.4.5",
-    "compare-versions": "^5.0.1",
-    "html-react-parser": "^3.0.16",
+    "compare-versions": "^6.1.0",
+    "html-react-parser": "^4.2.2",
     "react-markdown": "^8.0.7",
     "react-syntax-highlighter": "^15.5.0",
     "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
-    "@types/node": "^18.15.13",
-    "@types/react": "^18.0.38",
-    "@types/react-dom": "^18.0.11",
-    "@types/react-syntax-highlighter": "^15.5.6",
-    "ts-loader": "^9.4.2",
-    "typescript": "^5.0.4",
-    "webpack": "^5.80.0",
-    "webpack-cli": "^5.0.2"
+    "@types/node": "^20.6.2",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "@types/react-syntax-highlighter": "^15.5.7",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.2.2",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   }
 }
