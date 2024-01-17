@@ -14,7 +14,16 @@ function Profile(){
         <PageBase>
             <div className="mt-5 text-center">
                 <h1 className="text-3xl font-bold">{userData?.name}</h1>
-                {userData && <img src={`https://crafatar.com/renders/body/${userData.uuid}?overlay&scale=10`} alt={userData.name} />}
+                {/*{userData && <img src={`https://crafatar.com/renders/body/${userData.uuid}?overlay&scale=10`} alt={userData.name} />}*/}
+                {userData && (
+                    <iframe
+                        style={{
+                            width: "100%",
+                            height: "75vh"
+                        }}
+                        src={`https://minerender.org/embed/skin/?skin=${userData.name}&shadow=true`}
+                    ></iframe>
+                )}
             </div>
         </PageBase>
     )
