@@ -54,7 +54,7 @@
         ],
         "extraFiles": [],
         "linux": {
-            "target": "deb",
+            "target": ["deb", "rpm", "AppImage"],
             "icon": "./static/logo/512x512.png",
             "category": "Game",
             "publish": {
@@ -73,7 +73,7 @@
             }
         },
         "mac": {
-            "target": "dmg",
+            "target": ["dmg", "pkg", "zip"],
             "icon": "./static/logo/512x512.icns",
             "darkModeSupport": true,
             "publish": {
